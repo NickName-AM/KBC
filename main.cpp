@@ -1,6 +1,5 @@
 #include<iostream>
 #include<fstream>
-#include<tuple>
 
 using namespace std;
 
@@ -10,53 +9,92 @@ protected:
     string q;               // The Question
     string option[4];       // Options for the Question
     string filename;        // File where the questions/options are at
+    string answerFile;      // File containing answers
+    string a;               // The Answer
 
     // Get a random number between 1 and 50
     int getRandomNum(){
-        srand(time(0));     // Seed for random number
-        int randNum = int(rand())%(2 - 1 + 1) + 1;     // A random integer betn 1 and 50
+        srand(time(0));     
+
+        // A random integer betn 1 and 50
+        int randNum = int(rand())%(2 - 1 + 1) + 1;     
         return randNum;
     }
 public:
-    virtual tuple<string, string, string, string, string, int> getQuestionAndOptions() = 0;
+    virtual string getRandomQuestion() = 0;
+    virtual void displayOptions() = 0;
+    virtual int getQuestionNumber() = 0;
+    virtual int getAnswer() = 0;
 };
 
 class QuestionLevel1: public Question{
+protected:
+    int grabQuestionNumber(){
+        // Get the Question number located at the beginning of the line
+        int num = 0;
+        num = int(this->q[0]) - 48;
+        if (this->q[1] != ' ')
+            num = num * 10 + (int(this->q[1]) - 48);
+        return num;
+    }
 public:
     // Constructor
     QuestionLevel1(){
         this->filename = "level1.txt";
+        this->answerFile = "answer1.txt";
     }
 
-    // Return 1 Question and 4 options
-    // Question, option1, option2, option3, option4
-    // To Access: get<0>(object.getQuestion())    This will catch 
-    tuple<string, string, string, string, string, int> getQuestionAndOptions(){
-        int randNum = getRandomNum();
-        ifstream file(filename);
-        while (getline (file, this->q)){
+    // Returns a random question
+    string getRandomQuestion(){
+        this->questionNumber = getRandomNum();
+        ifstream file(this->filename);
+        while(getline (file, this->q)){
+            int num = grabQuestionNumber();
+            
+            if (this->questionNumber == num){
+                file.close();
+                return this->q;
+            }
+        }
+        return "Error";
+    }
 
-            // Get the Question number located at the begining of the line
-            int num = 0;
-            num = int(this->q[0]) - 48;
-            if (this->q[1] != ' ')
-                num = num * 10 + (int(this->q[1]) - 48);
-            // Got the Integer
+    // Displays the options
+    void displayOptions(){
+        ifstream file(this->filename);
+        while(getline (file, this->q)){
+            int num = grabQuestionNumber();
 
-            // If the number at the beginning of the line is equal to random number, return the question and options
-            if (randNum == num){
+            if (this-> questionNumber == num){
                 for(int i = 0; i<4; i++)
                     getline(file, this->option[i]);
                 file.close();
-
-                // Return the random question and 4 options
-                return make_tuple(this->q, this->option[0], this->option[1], this->option[2], this->option[3], randNum);
             }
         }
-        // Error will occur if the random number is not generated between 1 and 50
-        return make_tuple("Error", "Error", "Error", "Error", "Error");
+        cout << "1 " << option[0] << "\t\t" << "2 " << option[1] << endl; 
+        cout << "3 " << option[2] << "\t\t" << "4 " << option[3] << endl; 
+    }
 
+    // Get the question number of the chosen question
+    int getQuestionNumber(){
+        return this->questionNumber;
+    }
 
+    // Get the answer of the chosed question
+    int getAnswer(){
+        ifstream file(this->answerFile);
+        while (getline (file, this->a)){
+            int num = 0;
+            num = int(this->a[0]) - 48;
+            if (this->a[1] != ' ')
+                num = num * 10 + (int(this->a[1]) - 48);
+
+            if(num == this->questionNumber)    
+                return int(this->a[this->a.length() - 1]) - 48;     // The last character as integer which is our option
+        }
+
+        // Error
+        return -1;
     }
 };
 
@@ -64,15 +102,34 @@ class QuestionLevel2: public QuestionLevel1{
     public:
     QuestionLevel2(){
         this->filename = "level2.txt";
+        this->answerFile = "answer2.txt";
     }
-
 };
 
+class QuestionLevel3: public QuestionLevel1{
+    public:
+    QuestionLevel3(){
+        this->filename = "level3.txt";
+        this->answerFile = "answer3.txt";
+    }
+};
+
+class QuestionLevel4: public QuestionLevel4{
+    public:
+    QuestionLevel4(){
+        this->filename = "level4.txt";
+        this->answerFile = "answer4.txt";
+    }
+};
 
 int main(){
-
     QuestionLevel2 q1;
-    cout << get<1>(q1.getQuestionAndOptions()) << endl;
 
+    cout<<q1.getRandomQuestion()<< endl;
+    q1.displayOptions();
+    cout << q1.getQuestionNumber() << endl;
+    cout << q1.getAnswer() << endl;
+
+    
     return 0;
 }

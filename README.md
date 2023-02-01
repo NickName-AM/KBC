@@ -4,6 +4,14 @@
 
 ### Obviously, Abik, Dipesh ra Saugat
 
+## What it can do right now
+```
+- Choose random question from a file
+- Display options for that question
+- Get the Question's question number
+- Get the answer for that question
+``` 
+
 ## To-Do
 ```
 Create the structure
@@ -12,6 +20,5 @@ Lifeline
 
 
 Abik is working on:
-A Method that returns the answer of the question
-
+Done: A Method that returns the answer of the question
 ```

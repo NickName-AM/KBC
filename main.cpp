@@ -27,13 +27,15 @@ protected:
     }
 public:
     virtual string getRandomQuestion() = 0;
-    virtual tuple<string, string, string, string> getOptions() = 0;
+    virtual string getPureQuestion() = 0;
+    virtual void displayOptions() = 0;
     virtual int getQuestionNumber() = 0;
     virtual int getAnswer() = 0;
 };
 
-class QuestionLevel1: public Question{
+class GameManager: public Question{
 protected:
+    int level;
     int grabQuestionNumber(){
         // Get the Question number located at the beginning of the line
         int num = 0;
@@ -43,43 +45,25 @@ protected:
         return num;
     }
 public:
-    QuestionLevel1();                                       // Constructor
+    GameManager();                                       // Constructor
 
-    string getRandomQuestion();                             // Returns a random question
-    tuple<string, string, string, string> getOptions();     // return 4 options as 4-tuple
+    string getRandomQuestion();                             // Returns a random question USE THE ONE BELOW THIS
+    string getPureQuestion();                                   // Get Question without the initial question number USE THIS
+    void displayOptions();     // return 4 options as 4-tuple
     int getQuestionNumber();                                // Get the question number of the chosen question
     int getAnswer();                                        // Get the answ er of the chosed question
+    void increaseLevel();
 };
-
-class QuestionLevel2: public QuestionLevel1{
-    public:
-    QuestionLevel2(){
-        this->filename = "level2.txt";
-        this->answerFile = "answer2.txt";
-    }
-};
-
-class QuestionLevel3: public QuestionLevel1{
-    public:
-    QuestionLevel3(){
-        this->filename = "level3.txt";
-        this->answerFile = "answer3.txt";
-    }
-};
-
-class QuestionLevel4: public QuestionLevel1{
-    public:
-    QuestionLevel4(){
-        this->filename = "level4.txt";
-        this->answerFile = "answer4.txt";
-    }
-};
-
 
 
 // QuestionLevel1 Function Definitions
 // =====================================================
-string QuestionLevel1::getRandomQuestion(){
+GameManager::GameManager(){
+    this->filename = "level1.txt";
+    this->answerFile = "answer1.txt";
+}
+
+string GameManager::getRandomQuestion(){
         this->questionNumber = getRandomNum(1, 2);
         ifstream file(this->filename);
         while(getline (file, this->q)){
@@ -93,24 +77,38 @@ string QuestionLevel1::getRandomQuestion(){
         return "Error";
     }
 
-tuple<string, string, string, string> QuestionLevel1::getOptions(){
+string GameManager::getPureQuestion(){
+    string q = this->getRandomQuestion();
+    string pureQuestion;
+    int c;
+    for (c = 0; c<q.length(); c++){
+        if(c<2) continue;
+        pureQuestion += q[c];
+    }
+    return pureQuestion;
+
+}
+
+void GameManager::displayOptions(){
     ifstream file(this->filename);
     while(getline (file, this->q)){
         int num = grabQuestionNumber();
-        if (this-> questionNumber == num){
+        if (this->questionNumber == num){
             for(int i = 0; i<4; i++)
                 getline(file, this->option[i]);
             file.close();
         }
     }
-    return make_tuple(this->option[0], this->option[1], this->option[2], this->option[3]);
+    cout << "1 " << this->option[0] << "\t\t" << "2 " << this->option[1] << endl;
+    cout << "3 " << this->option[2] << "\t\t" << "4 " << this->option[3] << endl;
+
 }
 
-int QuestionLevel1::getQuestionNumber(){
+int GameManager::getQuestionNumber(){
     return this->questionNumber;
 }
 
-int QuestionLevel1::getAnswer(){
+int GameManager::getAnswer(){
     ifstream file(this->answerFile);
     while (getline (file, this->a)){
         int num = 0;
@@ -126,10 +124,21 @@ int QuestionLevel1::getAnswer(){
     return -1;
 }
 
-QuestionLevel1::QuestionLevel1(){
-    this->filename = "level1.txt";
-    this->answerFile = "answer1.txt";
+void GameManager::increaseLevel(){
+    this->level++;
+    if (this->level == 2){
+        this->filename = "level2.txt";
+        this->answerFile = "answer2.txt";
+    } else if(this->level == 3){
+        this->filename = "level3.txt";
+        this->answerFile = "answer3.txt";
+    } else {
+        this->filename = "level4.txt";
+        this->answerFile = "answer4.txt";
+    }
 }
+
+
 
 // ==================================================
 // End of QuestionLevel1 Function Definition
@@ -152,7 +161,7 @@ private:
 public:
     // Constructor
     Structure(){
-        this->p = 15;
+        this->p = 1;
         this->checkpoints[0] = 4;
         this->checkpoints[1] = 8;
         this->checkpoints[2] = 15;
@@ -177,7 +186,10 @@ public:
 
             if (i == 15 || i == 8 || i == 4){
                 w = 29;
+                if (i == 8 || i == 4) w = 30;
                 position = "(" + position + ")";
+            }else{
+                position = " " + position;
             }
 
 
@@ -210,34 +222,89 @@ public:
     }
 };
 
+void startOptions(){
+    cout << "1 Start Game" << endl;
+    cout << "2 Exit" << endl;
+}
+
+void clrscr(){
+    system("clear");
+}
+
+void startgame()
+{
+    int i;
+    for(i=0;i<70;i++)
+    {
+        cout<<"|";
+    }
+    cout<<endl<<endl<<endl<<endl<<endl<<endl;
+
+    cout<<setw(50)<<"Welcome to Ko Bancha Crorepati";
+    cout<<endl<<endl;
+    cout<<setw(42)<<"Start New game (1)";
+
+    cout<<endl<<endl<<endl<<endl<<endl<<endl;
+    for(i=0;i<70;i++)
+    {
+        cout<<"|";
+    }
+
+
+    if(cin.get()=='1')
+    {
+        clrscr();
+    }
+
+}
 
 
 int main(){
-    QuestionLevel1 q1;
+    GameManager gm;
     Structure s;
+    string question;
+    int correctAnswer;
+    int guessAnswer;
+    int questionCounter = 0;
+    string username;
 
-    // Display the structure ( Use a loop, the position of '>>' will automatically change in each iteration)
-    s.display();
 
-    // Get a random question
-    string question = q1.getRandomQuestion();
+    // Start the game
+    startgame();
+    sleep(1);
+
+    cout << "Your name: " << endl;
+    cin >> username;
+    string filename = username + ".txt";
+
+    ofstream fd;
+    fd.open(filename, ios::out);
     
-    // Display that question
-    cout << question << endl;
+    // Game Start
+    for (int position=1; position <=15; ++position){
+        clrscr();
+        s.display();
+        cout << endl << endl;
+        
+        // Question
+        question = gm.getPureQuestion();
+        cout << question << endl;
+        gm.displayOptions();
+        correctAnswer = gm.getAnswer();
+        cout << endl << "> ";
+        cin >> guessAnswer;
 
-    // Get the options
-    tuple<string, string, string, string> options = q1.getOptions();
-    
-    // Display the options
-    cout << get<0>(options) << "\t\t\t\t" << get<1>(options) << endl;
-    cout << get<2>(options) << "\t\t\t\t" << get<3>(options) << endl;
-    
+        fd << question << endl;
+        fd << guessAnswer << endl << endl;
+        
 
-    // Get Current Position in the structure (1 to 15)
-    cout << s.getCurrentPosition() << endl;
+        // If correct Answer, increase question counter
+        questionCounter++;
+        if (questionCounter == 4 || questionCounter == 8 || questionCounter == 11 )
+            gm.increaseLevel();
+    }
 
-    // Get Last Checkpoint in the structure (4 or 8 or 15)
-    cout << s.getCheckpoint() << endl;
+    fd.close();
 
     return 0;
 }

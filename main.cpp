@@ -12,12 +12,12 @@ protected:
     string answerFile;      // File containing answers
     string a;               // The Answer
 
-    // Get a random number between 1 and 50
-    int getRandomNum(){
+    // Get a random number in the given range
+    template<class A, class B>A getRandomNum(A min, B max){
         srand(time(0));     
 
         // A random integer betn 1 and 50
-        int randNum = int(rand())%(2 - 1 + 1) + 1;     
+        A randNum = int(rand())%(max - min + 1) + min;     
         return randNum;
     }
 public:
@@ -46,7 +46,7 @@ public:
 
     // Returns a random question
     string getRandomQuestion(){
-        this->questionNumber = getRandomNum();
+        this->questionNumber = getRandomNum(1, 2);
         ifstream file(this->filename);
         while(getline (file, this->q)){
             int num = grabQuestionNumber();
@@ -114,7 +114,7 @@ class QuestionLevel3: public QuestionLevel1{
     }
 };
 
-class QuestionLevel4: public QuestionLevel4{
+class QuestionLevel4: public QuestionLevel1{
     public:
     QuestionLevel4(){
         this->filename = "level4.txt";

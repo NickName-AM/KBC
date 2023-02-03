@@ -5,6 +5,10 @@
 #include<string>
 #include<stdlib.h>
 #include<unistd.h>
+#include <Windows.h>
+#include <conio.h>
+#include "./header/console.h"
+#include "./header/start_page.h"
 
 using namespace std;
 
@@ -19,10 +23,10 @@ protected:
 
     // Get a random number in the given range
     template<class A, class B>A getRandomNum(A min, B max){
-        srand(time(0));     
+        srand(time(0));
 
         // A random integer betn 1 and 50
-        A randNum = int(rand())%(max - min + 1) + min;     
+        A randNum = int(rand())%(max - min + 1) + min;
         return randNum;
     }
 public:
@@ -59,8 +63,8 @@ public:
 // QuestionLevel1 Function Definitions
 // =====================================================
 GameManager::GameManager(){
-    this->filename = "level1.txt";
-    this->answerFile = "answer1.txt";
+    this->filename = "./question/level1.txt";
+    this->answerFile = "./answer/answer1.txt";
 }
 
 string GameManager::getRandomQuestion(){
@@ -68,7 +72,7 @@ string GameManager::getRandomQuestion(){
         ifstream file(this->filename);
         while(getline (file, this->q)){
             int num = grabQuestionNumber();
-            
+
             if (this->questionNumber == num){
                 file.close();
                 return this->q;
@@ -99,8 +103,8 @@ void GameManager::displayOptions(){
             file.close();
         }
     }
-    cout << "1 " << this->option[0] << "\t\t" << "2 " << this->option[1] << endl;
-    cout << "3 " << this->option[2] << "\t\t" << "4 " << this->option[3] << endl;
+    gotoxy(7,13);cout << "1) " << this->option[0]<< "\t\t" << "2) " << this->option[1]<< endl;
+    gotoxy(8,13);cout << "3) " << this->option[2]<< "\t\t" << "4) " << this->option[3]<< endl;
 
 }
 
@@ -116,8 +120,8 @@ int GameManager::getAnswer(){
 
         if (this->a[1] != ' ')
             num = num * 10 + (int(this->a[1]) - 48);
-        
-        if(num == this->questionNumber)    
+
+        if(num == this->questionNumber)
             return int(this->a[this->a.length() - 1]) - 48;     // The last character as integer which is our option
     }
     // Error
@@ -127,14 +131,14 @@ int GameManager::getAnswer(){
 void GameManager::increaseLevel(){
     this->level++;
     if (this->level == 2){
-        this->filename = "level2.txt";
-        this->answerFile = "answer2.txt";
+        this->filename = "./question/level2.txt";
+        this->answerFile = "./answer/answer2.txt";
     } else if(this->level == 3){
-        this->filename = "level3.txt";
-        this->answerFile = "answer3.txt";
+        this->filename = "./question/level3.txt";
+        this->answerFile = "./answer/answer3.txt";
     } else {
-        this->filename = "level4.txt";
-        this->answerFile = "answer4.txt";
+        this->filename = "./question/level4.txt";
+        this->answerFile = "./answer/answer4.txt";
     }
 }
 
@@ -145,12 +149,12 @@ void GameManager::increaseLevel(){
 
 
 
-void symbolPrinter(char symbol, int no){
+/*void symbolPrinter(char symbol, int no){
     int i;
     for (i=0; i<no; ++i)
         cout << symbol;
     cout << endl;
-}
+}*/
 
 
 
@@ -169,14 +173,14 @@ public:
 
     // Display the structure
     void display(){
-        symbolPrinter('|', 70);
-        symbolPrinter('.', 70);
-        cout << "Lifeline" << setw(42) << "X2(Double 5)\t>>(Next 6)" << endl;
-        symbolPrinter('.', 70);
+
+        gotoxy(3,92);cout<<"BREAKTHROUHH";
+        gotoxy(5,95);cout << "Lifeline"<< endl;
+        gotoxy(7,77);cout<<"X2(Double 5)\t>>(Next 6)" << endl;
 
         string money[] = {"5K", "10K", "20K", "40K", "80K", "1.6Lakh", "3.2Lakh", "6.4Lakh", "12.5Lakh", "25Lakh", "50Lakh", "1 Crore", "3 Crore", "5 Crore", "7 Crore"};
-        int i;
-        for(i = 15; i>0; i--){
+        int i,j=0;
+        for(i = 15; i>0; i--,j++){
             int c = i - 1;
             int w = 30;
             string position = to_string(i);
@@ -193,14 +197,16 @@ public:
             }
 
 
-            cout << position;
+            gotoxy(9+j,78);cout << position;
             if (i == p){
                 w-=2;
-                cout << setw(w-10) << ">>" << setw(12) << money[c] << endl;
+                cout << setw(w-10) << ">>" << setw(20) << money[c] << endl;
             }
-            else cout << setw(w) << money[c] << endl;
+            else cout << setw(w+8) << money[c] << endl;
         }
-        symbolPrinter('.', 70);
+
+        draw_boundary();
+
         this->p++;
     }
 
@@ -215,51 +221,85 @@ public:
         for (int i=0; i<3; ++i){
             if(this->p >= this->checkpoints[i]){
                 cp = this->checkpoints[i];
-                
+
             }
         }
         return cp;
     }
 };
 
-void startOptions(){
-    cout << "1 Start Game" << endl;
-    cout << "2 Exit" << endl;
-}
+// void startOptions(){
+//     cout << "1 Start Game" << endl;
+//     cout << "2 Exit" << endl;
+// }
 
 void clrscr(){
-    system("clear");
+    system("cls");
 }
 
-void startgame()
+string startgame()
 {
-    int i;
-    for(i=0;i<70;i++)
+string username;
+    start_page();
+
+    gotoxy(18,60);cout<<"Start a New Game[1]";
+    gotoxy(18,18);cout << "Help[2]";
+    gotoxy(18,110);cout << "Quit[3]" << endl;
+    char starting_user_input='0';
+    while(starting_user_input != '1' ||'3'||'2')
     {
-        cout<<"|";
+        gotoxy(19,67);starting_user_input= getch();
+        if(starting_user_input=='1')
+        {
+            username=requestName();
+            clrscr();
+            break;
+        }
+        else if(starting_user_input=='3')
+        {
+            exit(0);
+        }
+        else if(starting_user_input=='2')
+        {
+            clrscr();
+            help();
+            gotoxy(18,28);cout<<"Start a New Game[1]";
+            gotoxy(18,95);cout << "Quit[2]" << endl;
+            starting_user_input='0';
+            while(starting_user_input != '1'||'2')
+            {
+             gotoxy(19,68);starting_user_input= getch();
+             if(starting_user_input=='1')
+             {
+                username=requestName();
+                clrscr();
+                break;
+             }
+            else if(starting_user_input=='2')
+             {
+                exit(0);
+             }
+            }
+            break;
+        }
     }
-    cout<<endl<<endl<<endl<<endl<<endl<<endl;
-
-    cout<<setw(50)<<"Welcome to Ko Bancha Crorepati";
-    cout<<endl<<endl;
-    cout<<setw(42)<<"Start New game (1)";
-
-    cout<<endl<<endl<<endl<<endl<<endl<<endl;
-    for(i=0;i<70;i++)
-    {
-        cout<<"|";
-    }
-
-
-    if(cin.get()=='1')
-    {
-        clrscr();
-    }
-
+    return username;
 }
 
 
 int main(){
+    SetConsoleOutputCP(CP_UTF8);
+
+
+    // To resize the console
+
+    int horizontal;
+    int vertical;
+    GetDesktopResolution(horizontal, vertical);
+
+    HWND hWnd=GetConsoleWindowNT();
+    MoveWindow(hWnd,0,0,horizontal,vertical,TRUE);
+
     GameManager gm;
     Structure s;
     string question;
@@ -269,34 +309,34 @@ int main(){
     string username;
 
 
-    // Start the game
-    startgame();
-    sleep(1);
 
-    cout << "Your name: " << endl;
-    cin >> username;
+    Sleep(1);
+
+    // Start the game and take the username
+
+    username=startgame();
     string filename = username + ".txt";
 
     ofstream fd;
     fd.open(filename, ios::out);
-    
+
     // Game Start
     for (int position=1; position <=15; ++position){
         clrscr();
         s.display();
         cout << endl << endl;
-        
+
         // Question
         question = gm.getPureQuestion();
-        cout << question << endl;
+        gotoxy(5,12);cout <<"[*]"<<question << endl;
         gm.displayOptions();
         correctAnswer = gm.getAnswer();
         cout << endl << "> ";
-        cin >> guessAnswer;
+        gotoxy(10,20);cout<<"Input: ";cin >> guessAnswer;
 
         fd << question << endl;
         fd << guessAnswer << endl << endl;
-        
+
 
         // If correct Answer, increase question counter
         questionCounter++;

@@ -35,6 +35,10 @@ public:
     virtual void displayOptions() = 0;
     virtual int getQuestionNumber() = 0;
     virtual int getAnswer() = 0;
+    virtual void gameOver(int)=0;
+
+
+    //~Question(){}
 };
 
 class GameManager: public Question{
@@ -57,6 +61,9 @@ public:
     int getQuestionNumber();                                // Get the question number of the chosen question
     int getAnswer();                                        // Get the answ er of the chosed question
     void increaseLevel();
+    void gameOver(int correctposition);
+
+    ~GameManager(){}
 };
 
 
@@ -141,6 +148,10 @@ void GameManager::increaseLevel(){
         this->answerFile = "./answer/answer4.txt";
     }
 }
+void GameManager::gameOver(int correctposition){
+    draw_boundary();
+    cheque_box(correctposition);
+}
 
 
 
@@ -206,6 +217,7 @@ public:
         }
 
         draw_boundary();
+        breakthrough_box();
 
         this->p++;
     }
@@ -251,7 +263,7 @@ string username;
         gotoxy(19,67);starting_user_input= getch();
         if(starting_user_input=='1')
         {
-            username=requestName();
+            username=request_Name();
             clrscr();
             break;
         }
@@ -271,7 +283,7 @@ string username;
              gotoxy(19,68);starting_user_input= getch();
              if(starting_user_input=='1')
              {
-                username=requestName();
+                username=request_Name();
                 clrscr();
                 break;
              }
@@ -285,6 +297,12 @@ string username;
     }
     return username;
 }
+
+void gameOver(int correctposition){
+    draw_boundary();
+    cheque_box(correctposition);
+}
+
 
 
 int main(){
@@ -300,13 +318,15 @@ int main(){
     HWND hWnd=GetConsoleWindowNT();
     MoveWindow(hWnd,0,0,horizontal,vertical,TRUE);
 
-    GameManager gm;
-    Structure s;
+   // GameManager gm;
+   // Structure s;
     string question;
     int correctAnswer;
-    int guessAnswer;
-    int questionCounter = 0;
+    char guessAnswer;
+    int lockedAnswer;
+    int questionCounter;
     string username;
+    char newinput;
 
 
 
@@ -314,6 +334,9 @@ int main(){
 
     // Start the game and take the username
 
+    NewGame:
+    GameManager gm;
+    Structure s;
     username=startgame();
     string filename = username + ".txt";
 
@@ -321,6 +344,7 @@ int main(){
     fd.open(filename, ios::out);
 
     // Game Start
+    questionCounter = 0;
     for (int position=1; position <=15; ++position){
         clrscr();
         s.display();
@@ -331,18 +355,84 @@ int main(){
         gotoxy(5,12);cout <<"[*]"<<question << endl;
         gm.displayOptions();
         correctAnswer = gm.getAnswer();
-        cout << endl << "> ";
-        gotoxy(10,20);cout<<"Input: ";cin >> guessAnswer;
+
+
+
+
+do{
+
+again:
+     gotoxy(10,20);symbolPrinter(' ',50);
+     gotoxy(10,20);cout<<"Input: ";
+     guessAnswer=getch();
+     gotoxy(10,27);cout<<guessAnswer;
+      gotoxy(10,28);char temp=getch();
+      if(temp=='\r' && guessAnswer>48 && guessAnswer<57)
+      {
+          break;
+      }
+      else
+        goto again;
+
+
+}while(true);
+lockedAnswer=guessAnswer - 48;
+
+
 
         fd << question << endl;
         fd << guessAnswer << endl << endl;
 
 
+        if(lockedAnswer==8)
+        {
+            system("cls");
+            gm.gameOver(questionCounter);
+            inputagain:
+            newinput=getch();
+            if(newinput=='1')
+            {
+                system("cls");
+                goto NewGame;
+            }
+            else if(newinput=='2')
+            {
+                system("cls");
+                exit(0);
+            }
+            else
+            {
+                goto inputagain;
+            }
+        }
+             questionCounter++;
+       // if(lockedAnswer==correctAnswer)
+        //{
+             if (questionCounter == 4 || questionCounter == 8 || questionCounter == 11 )
+             gm.increaseLevel();
+       // }
         // If correct Answer, increase question counter
-        questionCounter++;
-        if (questionCounter == 4 || questionCounter == 8 || questionCounter == 11 )
-            gm.increaseLevel();
     }
+    //After 15th question
+            system("cls");
+            gm.gameOver(questionCounter);
+            input_again:
+            newinput=getch();
+            if(newinput=='1')
+            {
+                system("cls");
+                goto NewGame;
+            }
+            else if(newinput=='2')
+            {
+                system("cls");
+                exit(0);
+            }
+            else
+            {
+                goto input_again;
+            }
+
 
     fd.close();
 

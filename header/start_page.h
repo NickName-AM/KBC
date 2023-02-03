@@ -1,4 +1,6 @@
 #include <iostream>
+#include<ctime>
+
 using namespace std;
 void gotoxy(short y,short x)
 {
@@ -125,12 +127,12 @@ void draw_boundary()
     {
         cout<<"=";
     }
-    breakthrough_box();
+
 }
 
 
 
-string requestName()
+string request_Name()
 {
     string username;
     gotoxy(18,17);
@@ -141,5 +143,31 @@ string requestName()
     cout<<">>   ";
     cin>>username;
     return username;
+
+}
+int cheque_box(int currentposition)
+{
+    string money[] = {"0","5K", "10K", "20K", "40K", "80K", "1.6Lakh", "3.2Lakh", "6.4Lakh", "12.5Lakh", "25Lakh", "50Lakh", "1 Crore", "3 Crore", "5 Crore", "7 Crore"};
+    gotoxy(5,23);symbolPrinter('_',87);
+    gotoxy(22,24);symbolPrinter('_',86);
+    for(int i=0;i<17;i++)
+    {
+        gotoxy(6+i,23);cout<<"|";
+        gotoxy(6+i,110);cout<<"|";
+    }
+     gotoxy(23,23);cout<<"|";
+     gotoxy(5,23);cout<<"*";gotoxy(5,110);cout<<"*";
+     gotoxy(23,23);cout<<"*";gotoxy(23,110);cout<<"*";
+     gotoxy(6,64);cout<<"CHEQUE";
+     gotoxy(13,50);cout<<"Congraulations!! You have won RS "<<money[currentposition];
+     gotoxy(18,30);cout<<"Signed By: Abik Maharjan, Dipesh Shrestha, Palden Gurung, Saugat Maharjan";
+     gotoxy(21,59);cout<<"Copyright \u00A9 2022";
+     gotoxy(24,14);cout << "Quit[2]" << endl;
+     gotoxy(24,114);cout<<"Next[1]";
+     gotoxy(10,55);
+     time_t givemetime = time(NULL);
+     cout<< ctime(&givemetime); //ctime() returns given time
+     gotoxy(24,68);
+   return 0;
 
 }

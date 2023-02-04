@@ -485,8 +485,10 @@ int main(){
 
                     if(wrong==2)
                     {
+                        int checkpoint=s.getCheckpoint();
+                        wrongAnswer();
                         system("cls");
-                        gm.gameOver(questionCounter);
+                        gm.gameOver(checkpoint);
                         anotherGameStart();
                         wrong=1;
                         goto NewGame;

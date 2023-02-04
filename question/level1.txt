@@ -1,28 +1,28 @@
-1 how to you create variable with the numeric value?
+1 how to you create variable with the numeric value 5?uhheuwehwuehuqwehqwiheiqwheqwiuehehqwheqwe
 double X=5;
 x=5;
 num x=5;
 int x=5;
 /
-2 in which italian city you can find the colosseum ?
+2 in which italian city you can find the colosseumwqyegywgywqgrwygrr?
 venice
 rome 
 naples
 milan
 /
-3 in which city is the juventus football club based?
+3 in which city is the juventus football club basediwqjewqehjquwehqwuiegqiwehqeqweqwjdbqwjhdbqwjhbd?
 Turin
 Barcelona
 manchester
 marseille
 /
-4 which operator can be used to compare two values?
+4 which operator can be used to compare two valuesweywqeguwqgyeuqe?
 ==
 =
 ><
 <>
 /
-5 which keyword is used to create a class in C++?
+5 which keyword is used to create a class in C++hwewqhewqheqwh?
 classname
 class()
 Myclass

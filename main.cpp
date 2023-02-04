@@ -82,7 +82,7 @@ string GameManager::getRandomQuestion(){
 
             if (this->questionNumber == num){
                 file.close();
-                
+
                 return this->q;
             }
         }
@@ -111,10 +111,10 @@ void GameManager::displayOptions(){
             file.close();
         }
     }
-    gotoxy(6,13);cout << "A) " << this->option[0];gotoxy(6,65);cout<<"[1]";
-    gotoxy(7,13);cout << "B) " << this->option[1];gotoxy(7,65);cout<<"[2]";
-    gotoxy(8,13);cout << "C) " << this->option[2];gotoxy(8,65);cout<<"[3]";
-    gotoxy(9,13);cout << "D) " << this->option[3];gotoxy(9,65);cout<<"[4]";
+    gotoxy(7,13);cout << "A) " << this->option[0];gotoxy(7,65);cout<<"[1]";
+    gotoxy(8,13);cout << "B) " << this->option[1];gotoxy(8,65);cout<<"[2]";
+    gotoxy(9,13);cout << "C) " << this->option[2];gotoxy(9,65);cout<<"[3]";
+    gotoxy(10,13);cout << "D) " << this->option[3];gotoxy(10,65);cout<<"[4]";
 
 
 }
@@ -163,16 +163,6 @@ void GameManager::gameOver(int correctposition){
 // End of QuestionLevel1 Function Definition
 
 
-
-/*void symbolPrinter(char symbol, int no){
-    int i;
-    for (i=0; i<no; ++i)
-        cout << symbol;
-    cout << endl;
-}*/
-
-
-
 class Structure{
 private:
     int p;
@@ -193,10 +183,10 @@ public:
         this->p=a+1;
         gotoxy(2,92);cout<<"BREAKTHROUHH";
         gotoxy(4,95);cout << "Lifeline"<< endl;
-        gotoxy(6,77);cout<<">>   [5]   X2   [6]  50:50   [7]" << endl;
-        gotoxy(7,79);cout<<"("<<s<<")";
-        gotoxy(7,85);cout<<"("<<d<<")";
-        gotoxy(7,91);cout<<"("<<f<<")";
+        gotoxy(6,77);cout<<">>"<<" "<<"("<<s<<")\t\t"<<"X2"<<" "<<"("<<d<<")\t\t" <<"50:50"<<" "<<"("<<f<<")\t\t"<< endl;
+        gotoxy(7,78);cout<<"[5]";
+        gotoxy(7,97);cout<<"[6]";
+        gotoxy(7,116);cout<<"[7]";
 
 
         string money[] = {"5K", "10K", "20K", "40K", "80K", "1.6Lakh", "3.2Lakh", "6.4Lakh", "12.5Lakh", "25Lakh", "50Lakh", "1 Crore", "3 Crore", "5 Crore", "7 Crore"};
@@ -279,6 +269,7 @@ string username;
         }
         else if(starting_user_input=='3')
         {
+            system("cls");
             exit(0);
         }
         else if(starting_user_input=='2')
@@ -299,6 +290,7 @@ string username;
              }
             else if(starting_user_input=='2')
              {
+                system("cls");
                 exit(0);
              }
             }
@@ -316,12 +308,7 @@ string username;
 
 
 
-int randomNumber(int A,int B)
-{
-    srand(time(0));
-    int random = int(rand()%(B-A+1))+ A;
-    return random;
-}
+
 
 int main(){
     SetConsoleOutputCP(CP_UTF8);
@@ -371,7 +358,9 @@ int main(){
         clrscr();
 
 
-        skipUsed: // label for Skip Lifeline
+        skipUsed:             // label for Branching after Skip Lifeline
+
+
         s.display(questionCounter,Skip,Double,Fifty);
         cout << endl << endl;
 
@@ -380,13 +369,24 @@ int main(){
         string question1 = "";
         string question2 = "";
         question = gm.getPureQuestion();
-        for (int i=0;i<55;i++)
+
+        if(question.length()<55)
+        {
+             for (int i=0;i<question.length();i++)
+             {
+                question1 += question[i];
+             }
+        }
+        else
+        {
+             for (int i=0;i<55;i++)
             question1 += question[i];
-        for (int i=55;i<question.length();i++)
+            for (int i=55;i<question.length();i++)
             question2 += question[i];
-        
+        }
+
         gotoxy(4,12);cout <<"[*]"<<question1 << endl;
-        gotoxy(5,12);cout <<question2<< endl;
+        gotoxy(5,16);cout <<question2<< endl;
 
         gm.displayOptions();
         correctAnswer = gm.getAnswer();
@@ -398,14 +398,20 @@ int main(){
 
         gotoxy(14,15);symbolPrinter(' ',43);
 
-        doubleUsed: //Label if double lifeline is used
+         //Label if double lifeline is used
 
         do{
 
         again:
-            gotoxy(10,20);symbolPrinter(' ',50);
+            gotoxy(12,20);symbolPrinter(' ',50);
             gotoxy(12,15);symbolPrinter(' ',11);
-            gotoxy(12,15);cout<<"Input: ";
+
+            gotoxy(19,35);cout<<"Special Note!!";
+            gotoxy(21,18);cout<<"Press enter only while Choosing Option and Lifeline";
+            gotoxy(22,32);cout<<"else no need to press Enter";
+
+            gotoxy(24,37);cout<<"LEAVE: [8]";
+            gotoxy(12,15);cout<<"INPUT: ";
             guessAnswer=getch();
             gotoxy(12,22);cout<<guessAnswer;
             gotoxy(12,23);char temp=getch();
@@ -425,6 +431,10 @@ int main(){
         fd << question << endl;
       //  fd << guessAnswer << endl << endl;
 
+
+      // label for Branching after using Lifeline
+        fiftyUsed:
+        doubleUsed:
 
         //If user wants to exit
         if(lockedAnswer==8)
@@ -466,50 +476,19 @@ int main(){
              {
                 --Double;
                 s.display(questionCounter,Skip,Double,Fifty);
+                int wrong=1;
                 errorDouble:
-                do{
+                lockedAnswer=guessAfterLifeline() - 48; // Our Header File
 
-                againInsidedouble:
-                gotoxy(10,20);symbolPrinter(' ',50);
-                gotoxy(12,15);symbolPrinter(' ',11);
-                gotoxy(12,15);cout<<"Input: ";
-                guessAnswer=getch();
-                gotoxy(12,22);cout<<guessAnswer;
-                gotoxy(12,23);char temp=getch();
-                if(temp=='\r' && ((guessAnswer>48 && guessAnswer<53)||guessAnswer==56))
+                if(lockedAnswer<5 && lockedAnswer!=correctAnswer)
                 {
-                    break;
-                }
-                else
-                    goto againInsidedouble;
 
-
-                }while(true);
-                lockedAnswer=guessAnswer - 48;
-
-                //If user wants to exit
-                if(lockedAnswer==8)
-                {
-                    system("cls");
-                    gm.gameOver(questionCounter);
-                    anotherGameStart();
-                    goto NewGame; // Our Header File
-                }
-
-                //If user guess correct answer
-                else if(lockedAnswer==correctAnswer)
-                {
-                    rightAnswer(); //Our Header File
-                }
-
-                else
-                {
-                    static int wrong=1;
                     if(wrong==2)
                     {
                         system("cls");
                         gm.gameOver(questionCounter);
                         anotherGameStart();
+                        wrong=1;
                         goto NewGame;
                     }
                     else
@@ -518,6 +497,8 @@ int main(){
                         goto errorDouble;
                     }
                 }
+                else
+                    goto doubleUsed;
              }
              else
              {
@@ -531,37 +512,35 @@ int main(){
 
 
         //50:50 Lifeline
-        /*int A[2];
-        int B[] = {1,2,3,4};
+
         else if(lockedAnswer==7)
         {
-            if (Fifty == 1)
+        int A[2];
+            if(Fifty == 1)
             {
-                validOption = randomNumber(1,4);
-                for (int i=0;i<4;i++)
-                {
-                    if (B[i] != validOption || B[i] != correctAnswer)
-                    {
-                        A[0] = B[i];
-                        break;
-                    }
-                }
-                
-                for (int i=0;i<4;i++)
-                {
-                    if ((B[i] != validOption || B[i] != correctAnswer) && B[i] != A[0])
-                    {
-                        A[1] = B[i];
-                        break;
-                    }
-                }
-*/
+                --Fifty;
+                int validOption = randomNumber(1,4);
+                A[0]=removeOption1(validOption,correctAnswer);
+                A[1]=removeOption2(validOption,correctAnswer,A[0]);
+                gotoxy(A[0]+6,13);symbolPrinter(' ',55);
+                gotoxy(A[1]+6,13);symbolPrinter(' ',55);
+
+                s.display(questionCounter,Skip,Double,Fifty);
+
+                lockedAnswer=guessAfterLifeline() - 48;   //Our Header File
+                goto fiftyUsed;
 
             }
+            else
+            {
+                    lifelineUsed(); //Our header File
+                    goto lifelineUsed;
+            }
         }
+        //End of 50:50
 
 
-
+        // If wrong Answer
         else
         {
             int checkpoint=s.getCheckpoint();

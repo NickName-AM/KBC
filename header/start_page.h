@@ -79,8 +79,10 @@ void help()
     gotoxy(10,12);cout<<"5.If you give wrong Answer you automatically fall back to your current checkpoints and your game ends";
     gotoxy(11,12);cout<<"6.You have 30 seconds until 7th question.From the begin of 8th Question you have unlimited time";
     gotoxy(12,12);cout<<"7.If your time is up then it is equivalent to wrong answer";
-    gotoxy(13,12);cout<<"8.You can quit the game to play safe and you win the reward of previous question";
-    gotoxy(16,60);cout<<"BEST OF LUCK!!!";
+    gotoxy(13,12);cout<<"8.You can Leave the game to play safe and you win the reward of previous question";
+    gotoxy(14,12);cout<<"8.You cannot use another Lifeline after using X2 or 50:50 in same qustion";
+    gotoxy(15,12);cout<<"9.You Have to Press enter only while Choosing Option and Lifeline else no need to press Enter";
+    gotoxy(18,60);cout<<"BEST OF LUCK!!!";
 }
 void symbolPrinter(char symbol, int no){
     int i;
@@ -93,7 +95,7 @@ void breakthrough_box()
         gotoxy(3,76);symbolPrinter('_', 45);
         gotoxy(5,76);symbolPrinter('.', 45);
         gotoxy(8,76);symbolPrinter('.', 45);
-     gotoxy(23,75);symbolPrinter('_', 46);
+     gotoxy(24,75);symbolPrinter('_', 46);
 
         for(int i=0;i<23;i++)
         {
@@ -186,7 +188,7 @@ void Cheque(int currentposition)
 }
 void rightAnswer()
 {
-            gotoxy(13,12);cout<<"You have entered correct answer";
+            gotoxy(13,15);cout<<"You have entered correct answer";
             gotoxy(16,38);cout<<"Next  [1]";
             gotoxy(16,47);
             do
@@ -198,7 +200,7 @@ void rightAnswer()
 }
 void wrongAnswer()
 {
-     gotoxy(13,12);cout<<"You have entered Incorrect answer";
+     gotoxy(13,15);cout<<"You have entered Incorrect answer";
             gotoxy(16,38);cout<<"Next  [1]";
             gotoxy(16,47);
             do
@@ -243,5 +245,70 @@ void lifelineUsed()
                     goto Pressagain;
                 }
 }
+int removeOption1(int validOption,int correctAnswer)
+{
+    int a;
+    int B[] = {1,2,3,4};
+    for (int i=0;i<4;i++)
+                {
+                    if (B[i] != validOption && B[i] != correctAnswer)
+                    {
+                        a = B[i];
+                        break;
+                    }
+                }
+                return a;
+
+}
+int removeOption2(int validOption,int correctAnswer,int A)
+{
+    int c;
+    int B[] = {1,2,3,4};
+    for (int i=0;i<4;i++)
+                {
+                    if ((B[i] != validOption && B[i] != correctAnswer) && B[i] != A)
+                    {
+                        c = B[i];
+                        break;
+                    }
+                }
+                return c;
+
+}
+
+char guessAfterLifeline()
+{
+        char guessAnswer;
+        do{
+                againInsidedouble:
+                gotoxy(12,20);symbolPrinter(' ',50);
+                gotoxy(12,15);symbolPrinter(' ',11);
+                gotoxy(19,35);cout<<"Special Note!!";
+                gotoxy(21,17);symbolPrinter(' ',54);
+                gotoxy(22,30);symbolPrinter(' ',11);
+                gotoxy(21,23);cout<<"You cannot use another Lifeline after";
+                gotoxy(22,25);cout<<"using X2 or 50:50 in same qustion";
+
+                gotoxy(24,37);cout<<"LEAVE: [8]";
+                gotoxy(12,15);cout<<"INPUT: ";
+                guessAnswer=getch();
+                gotoxy(12,22);cout<<guessAnswer;
+                gotoxy(12,23);char temp=getch();
+                if(temp=='\r' && ((guessAnswer>48 && guessAnswer<53)||guessAnswer==56))
+                {
+                    break;
+                }
+                else
+                    goto againInsidedouble;
 
 
+            }while(true);
+            return guessAnswer;
+
+}
+int randomNumber(int A,int B)
+{
+    srand(time(0));
+    int random = int(rand()%(B-A+1))+ A;
+    return random;
+}

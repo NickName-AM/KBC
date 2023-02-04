@@ -1,4 +1,4 @@
-1 who has won the Golden Boot in world cup 2022?
+1 who has won the Golden Boot in world cup 2022?jhrewejrlqwhjkweafafewaf
 kylian mbappe
 neymar jr
 lionel messi
@@ -16,13 +16,13 @@ None
 12
 16
 /
-4 which character is used to indicate an end tag?
+4 which character is used to indicate an end tag?ehrfbvhjwqeebdjwehfdwhefvwhedfwefwef
 <
 /
 ^
 *
 /
-5 how do you insert sinle line COMMENT in C++ code?
+5 how do you insert sinle line COMMENT in C++ code?dwqyedqwvdhwdvqydgvvqwSAVDVadvVDavd
 //
 /*
 #

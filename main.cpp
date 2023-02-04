@@ -75,13 +75,14 @@ GameManager::GameManager(){
 }
 
 string GameManager::getRandomQuestion(){
-        this->questionNumber = getRandomNum(1, 2);
+        this->questionNumber = getRandomNum(1, 5);
         ifstream file(this->filename);
         while(getline (file, this->q)){
             int num = grabQuestionNumber();
 
             if (this->questionNumber == num){
                 file.close();
+                
                 return this->q;
             }
         }
@@ -110,8 +111,11 @@ void GameManager::displayOptions(){
             file.close();
         }
     }
-    gotoxy(7,13);cout << "1) " << this->option[0]<< "\t\t" << "2) " << this->option[1]<< endl;
-    gotoxy(8,13);cout << "3) " << this->option[2]<< "\t\t" << "4) " << this->option[3]<< endl;
+    gotoxy(6,13);cout << "A) " << this->option[0];gotoxy(6,65);cout<<"[1]";
+    gotoxy(7,13);cout << "B) " << this->option[1];gotoxy(7,65);cout<<"[2]";
+    gotoxy(8,13);cout << "C) " << this->option[2];gotoxy(8,65);cout<<"[3]";
+    gotoxy(9,13);cout << "D) " << this->option[3];gotoxy(9,65);cout<<"[4]";
+
 
 }
 
@@ -150,7 +154,7 @@ void GameManager::increaseLevel(){
 }
 void GameManager::gameOver(int correctposition){
     draw_boundary();
-    cheque_box(correctposition);
+    Cheque(correctposition);
 }
 
 
@@ -172,22 +176,28 @@ void GameManager::gameOver(int correctposition){
 class Structure{
 private:
     int p;
-    int checkpoints[3];
+    int checkpoints[4];
 public:
     // Constructor
     Structure(){
         this->p = 1;
-        this->checkpoints[0] = 4;
-        this->checkpoints[1] = 8;
-        this->checkpoints[2] = 15;
+        this->checkpoints[0] = 0;
+        this->checkpoints[1] = 4;
+        this->checkpoints[2] = 8;
+        this->checkpoints[3] = 15;
+
     }
 
     // Display the structure
-    void display(){
+    void display(int a,int s,int d,int f){
+        this->p=a+1;
+        gotoxy(2,92);cout<<"BREAKTHROUHH";
+        gotoxy(4,95);cout << "Lifeline"<< endl;
+        gotoxy(6,77);cout<<">>   [5]   X2   [6]  50:50   [7]" << endl;
+        gotoxy(7,79);cout<<"("<<s<<")";
+        gotoxy(7,85);cout<<"("<<d<<")";
+        gotoxy(7,91);cout<<"("<<f<<")";
 
-        gotoxy(3,92);cout<<"BREAKTHROUHH";
-        gotoxy(5,95);cout << "Lifeline"<< endl;
-        gotoxy(7,77);cout<<"X2(Double 5)\t>>(Next 6)" << endl;
 
         string money[] = {"5K", "10K", "20K", "40K", "80K", "1.6Lakh", "3.2Lakh", "6.4Lakh", "12.5Lakh", "25Lakh", "50Lakh", "1 Crore", "3 Crore", "5 Crore", "7 Crore"};
         int i,j=0;
@@ -219,7 +229,7 @@ public:
         draw_boundary();
         breakthrough_box();
 
-        this->p++;
+
     }
 
     // Return the current position
@@ -298,12 +308,20 @@ string username;
     return username;
 }
 
-void gameOver(int correctposition){
+/*void gameOver(int correctposition)
+{
     draw_boundary();
-    cheque_box(correctposition);
+    Cheque(correctposition);
+}*/
+
+
+
+int randomNumber(int A,int B)
+{
+    srand(time(0));
+    int random = int(rand()%(B-A+1))+ A;
+    return random;
 }
-
-
 
 int main(){
     SetConsoleOutputCP(CP_UTF8);
@@ -327,6 +345,7 @@ int main(){
     int questionCounter;
     string username;
     char newinput;
+    int Skip,Double,Fifty;
 
 
 
@@ -335,6 +354,9 @@ int main(){
     // Start the game and take the username
 
     NewGame:
+    Skip=1;
+    Double=1;
+    Fifty=1;
     GameManager gm;
     Structure s;
     username=startgame();
@@ -347,91 +369,220 @@ int main(){
     questionCounter = 0;
     for (int position=1; position <=15; ++position){
         clrscr();
-        s.display();
+
+
+        skipUsed: // label for Skip Lifeline
+        s.display(questionCounter,Skip,Double,Fifty);
         cout << endl << endl;
 
+
         // Question
+        string question1 = "";
+        string question2 = "";
         question = gm.getPureQuestion();
-        gotoxy(5,12);cout <<"[*]"<<question << endl;
+        for (int i=0;i<55;i++)
+            question1 += question[i];
+        for (int i=55;i<question.length();i++)
+            question2 += question[i];
+        
+        gotoxy(4,12);cout <<"[*]"<<question1 << endl;
+        gotoxy(5,12);cout <<question2<< endl;
+
         gm.displayOptions();
         correctAnswer = gm.getAnswer();
 
 
 
 
-do{
+        lifelineUsed: // Label if lifeline is already used
 
-again:
-     gotoxy(10,20);symbolPrinter(' ',50);
-     gotoxy(10,20);cout<<"Input: ";
-     guessAnswer=getch();
-     gotoxy(10,27);cout<<guessAnswer;
-      gotoxy(10,28);char temp=getch();
-      if(temp=='\r' && guessAnswer>48 && guessAnswer<57)
-      {
-          break;
-      }
-      else
-        goto again;
+        gotoxy(14,15);symbolPrinter(' ',43);
+
+        doubleUsed: //Label if double lifeline is used
+
+        do{
+
+        again:
+            gotoxy(10,20);symbolPrinter(' ',50);
+            gotoxy(12,15);symbolPrinter(' ',11);
+            gotoxy(12,15);cout<<"Input: ";
+            guessAnswer=getch();
+            gotoxy(12,22);cout<<guessAnswer;
+            gotoxy(12,23);char temp=getch();
+            if(temp=='\r' && guessAnswer>48 && guessAnswer<57)
+            {
+                break;
+            }
+            else
+                goto again;
 
 
-}while(true);
-lockedAnswer=guessAnswer - 48;
+        }while(true);
+        lockedAnswer=guessAnswer - 48;
 
 
 
         fd << question << endl;
-        fd << guessAnswer << endl << endl;
+      //  fd << guessAnswer << endl << endl;
 
 
+        //If user wants to exit
         if(lockedAnswer==8)
         {
             system("cls");
             gm.gameOver(questionCounter);
-            inputagain:
-            newinput=getch();
-            if(newinput=='1')
+            anotherGameStart(); // Our Header File
+            goto NewGame;    // Go to Beginning page
+
+        }
+
+        //If user guess correct answer
+        else if(lockedAnswer==correctAnswer)
+        {
+            rightAnswer(); //Our Header File
+        }
+
+          //Skip lifeline
+        else if(lockedAnswer==5)
+        {
+            if(Skip==1)
             {
                 system("cls");
-                goto NewGame;
-            }
-            else if(newinput=='2')
-            {
-                system("cls");
-                exit(0);
+                --Skip;
+                goto skipUsed;
             }
             else
             {
-                goto inputagain;
+                lifelineUsed(); //Our header File
+                goto lifelineUsed;
+            }
+
+        }
+
+        //Double Lifeline
+        else if(lockedAnswer==6)
+        {
+             if(Double==1)
+             {
+                --Double;
+                s.display(questionCounter,Skip,Double,Fifty);
+                errorDouble:
+                do{
+
+                againInsidedouble:
+                gotoxy(10,20);symbolPrinter(' ',50);
+                gotoxy(12,15);symbolPrinter(' ',11);
+                gotoxy(12,15);cout<<"Input: ";
+                guessAnswer=getch();
+                gotoxy(12,22);cout<<guessAnswer;
+                gotoxy(12,23);char temp=getch();
+                if(temp=='\r' && ((guessAnswer>48 && guessAnswer<53)||guessAnswer==56))
+                {
+                    break;
+                }
+                else
+                    goto againInsidedouble;
+
+
+                }while(true);
+                lockedAnswer=guessAnswer - 48;
+
+                //If user wants to exit
+                if(lockedAnswer==8)
+                {
+                    system("cls");
+                    gm.gameOver(questionCounter);
+                    anotherGameStart();
+                    goto NewGame; // Our Header File
+                }
+
+                //If user guess correct answer
+                else if(lockedAnswer==correctAnswer)
+                {
+                    rightAnswer(); //Our Header File
+                }
+
+                else
+                {
+                    static int wrong=1;
+                    if(wrong==2)
+                    {
+                        system("cls");
+                        gm.gameOver(questionCounter);
+                        anotherGameStart();
+                        goto NewGame;
+                    }
+                    else
+                    {
+                        ++wrong;
+                        goto errorDouble;
+                    }
+                }
+             }
+             else
+             {
+                    lifelineUsed(); //Our header File
+                    goto lifelineUsed;
+             }
+        }
+
+        // End of Double Lifeline
+
+
+
+        //50:50 Lifeline
+        /*int A[2];
+        int B[] = {1,2,3,4};
+        else if(lockedAnswer==7)
+        {
+            if (Fifty == 1)
+            {
+                validOption = randomNumber(1,4);
+                for (int i=0;i<4;i++)
+                {
+                    if (B[i] != validOption || B[i] != correctAnswer)
+                    {
+                        A[0] = B[i];
+                        break;
+                    }
+                }
+                
+                for (int i=0;i<4;i++)
+                {
+                    if ((B[i] != validOption || B[i] != correctAnswer) && B[i] != A[0])
+                    {
+                        A[1] = B[i];
+                        break;
+                    }
+                }
+*/
+
             }
         }
+
+
+
+        else
+        {
+            int checkpoint=s.getCheckpoint();
+            wrongAnswer();
+            system("cls");
+            gm.gameOver(checkpoint);
+            anotherGameStart(); // Our Header File
+            goto NewGame;   // Go to Beginning Page
+        }
+
+
+        // If correct Answer, increase question counter
              questionCounter++;
-       // if(lockedAnswer==correctAnswer)
-        //{
              if (questionCounter == 4 || questionCounter == 8 || questionCounter == 11 )
              gm.increaseLevel();
-       // }
-        // If correct Answer, increase question counter
     }
     //After 15th question
             system("cls");
             gm.gameOver(questionCounter);
-            input_again:
-            newinput=getch();
-            if(newinput=='1')
-            {
-                system("cls");
-                goto NewGame;
-            }
-            else if(newinput=='2')
-            {
-                system("cls");
-                exit(0);
-            }
-            else
-            {
-                goto input_again;
-            }
+            anotherGameStart();  //Our Header file
+            goto NewGame;
 
 
     fd.close();

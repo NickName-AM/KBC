@@ -90,18 +90,18 @@ void symbolPrinter(char symbol, int no){
 }
 void breakthrough_box()
 {
-     gotoxy(24,75);symbolPrinter('_', 46);
-        gotoxy(6,76);symbolPrinter('.', 45);
+        gotoxy(3,76);symbolPrinter('_', 45);
+        gotoxy(5,76);symbolPrinter('.', 45);
         gotoxy(8,76);symbolPrinter('.', 45);
-        gotoxy(4,76);symbolPrinter('_', 45);
+     gotoxy(23,75);symbolPrinter('_', 46);
 
-        for(int i=0;i<20;i++)
+        for(int i=0;i<23;i++)
         {
-             gotoxy(5+i,75) ;cout<<"|";
-             gotoxy(5+i,121) ;cout<<"|";
+             gotoxy(2+i,75) ;cout<<"|";
+             gotoxy(2+i,121) ;cout<<"|";
         }
-        gotoxy(4,75);cout<<"*";
-        gotoxy(4,121);cout<<"*";
+        gotoxy(2,75);cout<<"*";
+        gotoxy(2,121);cout<<"*";
         gotoxy(25,75);cout<<"*";
         gotoxy(25,121);cout<<"*";
 }
@@ -145,10 +145,10 @@ string request_Name()
     return username;
 
 }
-int cheque_box(int currentposition)
+
+void chequeBox()
 {
-    string money[] = {"0","5K", "10K", "20K", "40K", "80K", "1.6Lakh", "3.2Lakh", "6.4Lakh", "12.5Lakh", "25Lakh", "50Lakh", "1 Crore", "3 Crore", "5 Crore", "7 Crore"};
-    gotoxy(5,23);symbolPrinter('_',87);
+     gotoxy(5,23);symbolPrinter('_',87);
     gotoxy(22,24);symbolPrinter('_',86);
     for(int i=0;i<17;i++)
     {
@@ -159,7 +159,6 @@ int cheque_box(int currentposition)
      gotoxy(5,23);cout<<"*";gotoxy(5,110);cout<<"*";
      gotoxy(23,23);cout<<"*";gotoxy(23,110);cout<<"*";
      gotoxy(6,64);cout<<"CHEQUE";
-     gotoxy(13,50);cout<<"Congraulations!! You have won RS "<<money[currentposition];
      gotoxy(18,30);cout<<"Signed By: Abik Maharjan, Dipesh Shrestha, Palden Gurung, Saugat Maharjan";
      gotoxy(21,59);cout<<"Copyright \u00A9 2022";
      gotoxy(24,14);cout << "Quit[2]" << endl;
@@ -168,6 +167,81 @@ int cheque_box(int currentposition)
      time_t givemetime = time(NULL);
      cout<< ctime(&givemetime); //ctime() returns given time
      gotoxy(24,68);
-   return 0;
+}
+
+void Cheque(int currentposition)
+{
+    chequeBox();
+    string money[] = {"0","5K", "10K", "20K", "40K", "80K", "1.6Lakh", "3.2Lakh", "6.4Lakh", "12.5Lakh", "25Lakh", "50Lakh", "1 Crore", "3 Crore", "5 Crore", "7 Crore"};
+    if(currentposition==0)
+    {
+    gotoxy(13,56);cout<<"Sorry :( You have won RS "<<money[currentposition];
+    }
+    else
+    {
+    gotoxy(13,50);cout<<"Congratulation!!! :) You have won RS "<<money[currentposition];
+    }
+
 
 }
+void rightAnswer()
+{
+            gotoxy(13,12);cout<<"You have entered correct answer";
+            gotoxy(16,38);cout<<"Next  [1]";
+            gotoxy(16,47);
+            do
+            {
+                if(getch()=='1')
+                    break;
+            }while(true);
+
+}
+void wrongAnswer()
+{
+     gotoxy(13,12);cout<<"You have entered Incorrect answer";
+            gotoxy(16,38);cout<<"Next  [1]";
+            gotoxy(16,47);
+            do
+            {
+                if(getch()=='1')
+                    break;
+            }while(true);
+
+}
+void anotherGameStart()
+{
+    char newinput;
+     inputagain:
+            newinput=getch();
+            if(newinput=='1')
+            {
+                system("cls");
+                //goto NewGame;
+                return;
+            }
+            else if(newinput=='2')
+            {
+                system("cls");
+                exit(0);
+            }
+            else
+            {
+                goto inputagain;
+            }
+}
+void lifelineUsed()
+{
+    gotoxy(14,15);cout<<"Lifeline used already!!!   ";
+                cout<<"Enter again  [1]";
+                Pressagain:
+                if(getch()=='1')
+                {
+                    return;
+                }
+                else
+                {
+                    goto Pressagain;
+                }
+}
+
+

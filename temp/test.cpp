@@ -2,8 +2,9 @@
 #include <thread>
 #include <chrono>
 #include <unistd.h>
-#include <termios.h>
+
 #include <cstring>
+#include<windows.h>
 
 using namespace std;
 

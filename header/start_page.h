@@ -1,5 +1,8 @@
 #include <iostream>
 #include<ctime>
+#include<conio.h>
+
+
 
 using namespace std;
 void gotoxy(short y,short x)
@@ -7,7 +10,29 @@ void gotoxy(short y,short x)
     COORD pos={x,y};
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),pos);
 }
+void symbolPrinter(char symbol, int no){
+    int i;
+    for (i=0; i<no; ++i)
+        cout << symbol;
+    cout << endl;
+}
+void counter(int current,int SR)
+{
+   static int last=100;
+        static int seconds=20;
+   if(current!=last || SR==1)
+        {
+            seconds=20;
+        }
 
+    while(!kbhit())
+    {
+
+        gotoxy(2,36);symbolPrinter(' ',4); gotoxy(2,20);cout<<"Time Remaining: "<<seconds<<"s";gotoxy(12,22);
+        Sleep(900);seconds=(seconds==0)?0:(seconds-1);
+        last=current;
+    }
+}
 void start_page()
 {
 
@@ -84,12 +109,7 @@ void help()
     gotoxy(15,12);cout<<"9.You Have to Press enter only while Choosing Option and Lifeline else no need to press Enter";
     gotoxy(18,60);cout<<"BEST OF LUCK!!!";
 }
-void symbolPrinter(char symbol, int no){
-    int i;
-    for (i=0; i<no; ++i)
-        cout << symbol;
-    cout << endl;
-}
+
 void breakthrough_box()
 {
         gotoxy(3,76);symbolPrinter('_', 45);
@@ -210,6 +230,18 @@ void wrongAnswer()
             }while(true);
 
 }
+void timeUp()
+{
+     gotoxy(13,15);cout<<"Your time is up, You gave answer in more than 20 sec";
+            gotoxy(16,38);cout<<"Next  [1]";
+            gotoxy(16,47);
+            do
+            {
+                if(getch()=='1')
+                    break;
+            }while(true);
+
+}
 void anotherGameStart()
 {
     char newinput;
@@ -238,6 +270,7 @@ void lifelineUsed()
                 Pressagain:
                 if(getch()=='1')
                 {
+                    gotoxy(14,15);symbolPrinter(' ',50);
                     return;
                 }
                 else
@@ -276,8 +309,9 @@ int removeOption2(int validOption,int correctAnswer,int A)
 
 }
 
-char guessAfterLifeline()
+char guessAfterLifeline(int Current,int SR)
 {
+
         char guessAnswer;
         do{
                 againInsidedouble:
@@ -291,9 +325,13 @@ char guessAfterLifeline()
 
                 gotoxy(24,37);cout<<"LEAVE: [8]";
                 gotoxy(12,15);cout<<"INPUT: ";
+                counter(Current,SR);
                 guessAnswer=getch();
                 gotoxy(12,22);cout<<guessAnswer;
+                counter(Current,SR);
                 gotoxy(12,23);char temp=getch();
+
+
                 if(temp=='\r' && ((guessAnswer>48 && guessAnswer<53)||guessAnswer==56))
                 {
                     break;
@@ -304,6 +342,7 @@ char guessAfterLifeline()
 
             }while(true);
             return guessAnswer;
+
 
 }
 int randomNumber(int A,int B)

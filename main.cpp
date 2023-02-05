@@ -9,6 +9,8 @@
 #include <conio.h>
 #include "./header/console.h"
 #include "./header/start_page.h"
+#include<vector>
+
 
 using namespace std;
 
@@ -333,6 +335,7 @@ int main(){
     string username;
     char newinput;
     int Skip,Double,Fifty;
+    int timeReset;
 
 
 
@@ -347,7 +350,7 @@ int main(){
     GameManager gm;
     Structure s;
     username=startgame();
-    string filename = username + ".txt";
+    string filename = "./players/" + username + ".txt";
 
     ofstream fd;
     fd.open(filename, ios::out);
@@ -358,7 +361,9 @@ int main(){
         clrscr();
 
 
-        skipUsed:             // label for Branching after Skip Lifeline
+        skipUsed:   // label for Branching after Skip Lifeline
+
+            timeReset=1;
 
 
         s.display(questionCounter,Skip,Double,Fifty);
@@ -394,14 +399,19 @@ int main(){
 
 
 
-        lifelineUsed: // Label if lifeline is already used
 
         gotoxy(14,15);symbolPrinter(' ',43);
 
          //Label if double lifeline is used
 
-        do{
 
+
+                int timeUsed;
+                time_t start,end,finish;
+                time(& start);
+
+        lifelineUsed: // Label if lifeline is already used
+        do{
         again:
             gotoxy(12,20);symbolPrinter(' ',50);
             gotoxy(12,15);symbolPrinter(' ',11);
@@ -412,9 +422,15 @@ int main(){
 
             gotoxy(24,37);cout<<"LEAVE: [8]";
             gotoxy(12,15);cout<<"INPUT: ";
+            counter(questionCounter,timeReset);
+            timeReset=0;
             guessAnswer=getch();
             gotoxy(12,22);cout<<guessAnswer;
+            counter(questionCounter,timeReset);
+            timeReset=0;
             gotoxy(12,23);char temp=getch();
+
+
             if(temp=='\r' && guessAnswer>48 && guessAnswer<57)
             {
                 break;
@@ -424,6 +440,23 @@ int main(){
 
 
         }while(true);
+
+        if(questionCounter<8)
+        {
+
+         time(& end);
+         timeUsed=difftime(end,start);
+            if( timeUsed>=20)
+            {
+                int checkpoint=s.getCheckpoint();
+                timeUp();
+                system("cls");
+                gm.gameOver(checkpoint);
+                anotherGameStart(); // Our Header File
+            goto NewGame;
+            }
+        }
+
         lockedAnswer=guessAnswer - 48;
 
 
@@ -455,9 +488,11 @@ int main(){
           //Skip lifeline
         else if(lockedAnswer==5)
         {
+
             if(Skip==1)
             {
                 system("cls");
+                timeReset=1;
                 --Skip;
                 goto skipUsed;
             }
@@ -478,7 +513,25 @@ int main(){
                 s.display(questionCounter,Skip,Double,Fifty);
                 int wrong=1;
                 errorDouble:
-                lockedAnswer=guessAfterLifeline() - 48; // Our Header File
+                lockedAnswer=guessAfterLifeline(questionCounter,timeReset) - 48; // Our Header File
+
+                if(questionCounter<8)
+                {
+
+                    time(& finish);
+                    timeUsed=difftime(finish,start);
+                    if( timeUsed>=20)
+                    {
+                        int checkpoint=s.getCheckpoint();
+                        timeUp();
+                        system("cls");
+                        gm.gameOver(checkpoint);
+                        anotherGameStart(); // Our Header File
+                        goto NewGame;
+                    }
+                }
+
+
 
                 if(lockedAnswer<5 && lockedAnswer!=correctAnswer)
                 {
@@ -517,6 +570,7 @@ int main(){
 
         else if(lockedAnswer==7)
         {
+
         int A[2];
             if(Fifty == 1)
             {
@@ -529,7 +583,24 @@ int main(){
 
                 s.display(questionCounter,Skip,Double,Fifty);
 
-                lockedAnswer=guessAfterLifeline() - 48;   //Our Header File
+                lockedAnswer=guessAfterLifeline(questionCounter,timeReset) - 48; //Our Header File
+
+                if(questionCounter<8)
+                {
+                    time(& finish);
+                    timeUsed=difftime(finish,start);
+                    if( timeUsed>=20)
+                    {
+                        int checkpoint=s.getCheckpoint();
+                        timeUp();
+                        system("cls");
+                        gm.gameOver(checkpoint);
+                        anotherGameStart(); // Our Header File
+                        goto NewGame;
+                    }
+                }
+
+
                 goto fiftyUsed;
 
             }

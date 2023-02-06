@@ -5,24 +5,24 @@
 
 
 using namespace std;
-void gotoxy(short y,short x)
+void gotoxy(short y,short x)  //To MoveCursor
 {
     COORD pos={x,y};
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),pos);
 }
-void symbolPrinter(char symbol, int no){
+void symbolPrinter(char symbol, int no){     //To print Characters n times
     int i;
     for (i=0; i<no; ++i)
         cout << symbol;
     cout << endl;
 }
-void counter(int current,int SR)
+void counter(int current,int SR)               //Timer
 {
    static int last=100;
         static int seconds=20;
         if(current>7)
         {
-            gotoxy(2,20);cout<<"You have unlimited time ";gotoxy(12,22);
+            gotoxy(2,20);cout<<"You have unlimited time ";gotoxy(12,22);  //After 8th Correct Answer
             return;
         }
         if(SR==1)
@@ -37,15 +37,15 @@ void counter(int current,int SR)
             }
         }
 
-        while(!kbhit())
+        while(!kbhit())                                                     //Breaks after User gives Input
         {
 
         gotoxy(2,36);symbolPrinter(' ',4); gotoxy(2,20);cout<<"Time Remaining: "<<seconds<<"s";gotoxy(12,22);
-        Sleep(950);seconds=(seconds==0)?0:(seconds-1);
+        Sleep(970);seconds=(seconds==0)?0:(seconds-1);
         last=current;
         }
 }
-void start_page()
+void start_page()    //Front Page
 {
 
    int i;
@@ -85,7 +85,7 @@ void start_page()
     gotoxy(15,47);cout<<" ▓▓▓▓▓▓  ▓▓    ▓▓  ▓▓▓▓▓▓  ▓▓    ▓▓ ▓▓▓▓▓▓▓▓ ▓▓       ▓▓    ▓▓    ▓▓    ▓▓▓▓▓▓";
 }
 
-void help()
+void help()     //If pressed for Help
 {
     int i;
     gotoxy(1,10);
@@ -122,7 +122,7 @@ void help()
     gotoxy(18,60);cout<<"BEST OF LUCK!!!";
 }
 
-void breakthrough_box()
+void breakthrough_box()      // To Print Breakthrough Box
 {
         gotoxy(3,76);symbolPrinter('_', 45);
         gotoxy(5,76);symbolPrinter('.', 45);
@@ -139,7 +139,7 @@ void breakthrough_box()
         gotoxy(25,75);cout<<"*";
         gotoxy(25,121);cout<<"*";
 }
-void draw_boundary()
+void draw_boundary()                    //To draw a Boundary
 {
      int i;
     gotoxy(1,10);
@@ -166,7 +166,7 @@ void draw_boundary()
 
 
 
-string request_Name()
+string request_Name()                       //Request name form user at start of the game
 {
     string username;
     gotoxy(18,17);
@@ -180,7 +180,7 @@ string request_Name()
 
 }
 
-void chequeBox()
+void chequeBox()                        //To display Box for Cheque
 {
      gotoxy(5,23);symbolPrinter('_',87);
     gotoxy(22,24);symbolPrinter('_',86);
@@ -194,7 +194,7 @@ void chequeBox()
      gotoxy(23,23);cout<<"*";gotoxy(23,110);cout<<"*";
      gotoxy(6,64);cout<<"CHEQUE";
      gotoxy(18,30);cout<<"Signed By: Abik Maharjan, Dipesh Shrestha, Palden Gurung, Saugat Maharjan";
-     gotoxy(21,59);cout<<"Copyright \u00A9 2022";
+     gotoxy(21,59);cout<<"Copyright \u00A9 2023";
      gotoxy(24,14);cout << "Quit[2]" << endl;
      gotoxy(24,114);cout<<"Next[1]";
      gotoxy(10,55);
@@ -203,7 +203,7 @@ void chequeBox()
      gotoxy(24,68);
 }
 
-void Cheque(int currentposition)
+void Cheque(int currentposition)                        //To Display winning amount
 {
     chequeBox();
     string money[] = {"0","5K", "10K", "20K", "40K", "80K", "1.6Lakh", "3.2Lakh", "6.4Lakh", "12.5Lakh", "25Lakh", "50Lakh", "1 Crore", "3 Crore", "5 Crore", "7 Crore"};
@@ -213,12 +213,12 @@ void Cheque(int currentposition)
     }
     else
     {
-    gotoxy(13,50);cout<<"Congratulation!!! :) You have won RS "<<money[currentposition];
+    gotoxy(13,48);cout<<"Congratulation!!! :) You have won RS "<<money[currentposition];
     }
 
 
 }
-void rightAnswer()
+void rightAnswer()                                        //If correct answer is guessed
 {
             gotoxy(13,15);cout<<"You have entered correct answer";
             gotoxy(16,38);cout<<"Next  [1]";
@@ -230,7 +230,7 @@ void rightAnswer()
             }while(true);
 
 }
-void wrongAnswer()
+void wrongAnswer()                                      //If wrong answer is Guessed
 {
      gotoxy(13,15);cout<<"You have entered Incorrect answer";
             gotoxy(16,38);cout<<"Next  [1]";
@@ -242,19 +242,27 @@ void wrongAnswer()
             }while(true);
 
 }
-void timeUp()
+void timeUp(int cp)                                           //If time is Up
 {
-     gotoxy(13,15);cout<<"Your time is up, You gave answer in more than 20 sec";
-            gotoxy(16,38);cout<<"Next  [1]";
-            gotoxy(16,47);
-            do
-            {
-                if(getch()=='1')
-                    break;
-            }while(true);
+    if(cp==0)
+    {
+     gotoxy(13,15);cout<<"Your time is up, You gave answer in more than 30 sec";
+    }
+    if(cp==4)
+    {
+     gotoxy(13,15);cout<<"Your time is up, You gave answer in more than 40 sec";
+    }
+
+    gotoxy(16,38);cout<<"Next  [1]";
+    gotoxy(16,47);
+    do
+    {
+        if(getch()=='1')
+            break;
+    }while(true);
 
 }
-void anotherGameStart()
+void anotherGameStart()      //To start another game after displaying winning amount. So it is probably called after Cheque function
 {
     char newinput;
      inputagain:
@@ -275,7 +283,7 @@ void anotherGameStart()
                 goto inputagain;
             }
 }
-void lifelineUsed(int current,int SR)
+void lifelineUsed(int current,int SR)                           //If try to used lifeline after it is already used
 {
     gotoxy(14,15);cout<<"Lifeline used already!!!   ";
                 cout<<"Enter again  [1]";
@@ -291,7 +299,7 @@ void lifelineUsed(int current,int SR)
                     goto Pressagain;
                 }
 }
-int removeOption1(int validOption,int correctAnswer)
+int removeOption1(int validOption,int correctAnswer)           //Finds Option 1 to remove in 50:50
 {
     int a;
     int B[] = {1,2,3,4};
@@ -306,7 +314,7 @@ int removeOption1(int validOption,int correctAnswer)
                 return a;
 
 }
-int removeOption2(int validOption,int correctAnswer,int A)
+int removeOption2(int validOption,int correctAnswer,int A)       //Finds Option 2 to remove in 50:50
 {
     int c;
     int B[] = {1,2,3,4};
@@ -322,7 +330,7 @@ int removeOption2(int validOption,int correctAnswer,int A)
 
 }
 
-char guessAfterLifeline(int Current,int SR)
+char guessAfterLifeline(int Current,int SR)                        //To Guess Answer after Lifeline used
 {
 
         char guessAnswer;
@@ -338,14 +346,14 @@ char guessAfterLifeline(int Current,int SR)
 
                 gotoxy(24,37);cout<<"LEAVE: [8]";
                 gotoxy(12,15);cout<<"INPUT: ";
-                counter(Current,SR);
+                counter(Current,SR);                                //Timer count
                 guessAnswer=getch();
                 gotoxy(12,22);cout<<guessAnswer;
-                counter(Current,SR);
+                counter(Current,SR);                                //Timer count
                 gotoxy(12,23);char temp=getch();
 
 
-                if(temp=='\r' && ((guessAnswer>48 && guessAnswer<53)||guessAnswer==56))
+                if(temp=='\r' && ((guessAnswer>48 && guessAnswer<53)||guessAnswer==56))     //Only proceeds if input 1-4 and pressed Enter
                 {
                     break;
                 }
@@ -358,7 +366,7 @@ char guessAfterLifeline(int Current,int SR)
 
 
 }
-int randomNumber(int A,int B)
+int randomNumber(int A,int B)                       //To generate Random Number
 {
     srand(time(0));
     int random = int(rand()%(B-A+1))+ A;

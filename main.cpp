@@ -40,6 +40,7 @@ public:
     virtual void gameOver(int)=0;
 
 
+
     //~Question(){}
 };
 
@@ -64,6 +65,7 @@ public:
     int getAnswer();                                        // Get the answ er of the chosed question
     void increaseLevel();
     void gameOver(int correctposition);
+    void timeLimit(GameManager &gm,int checkpoint);
 
     ~GameManager(){}
 };
@@ -159,10 +161,18 @@ void GameManager::gameOver(int correctposition){
     Cheque(correctposition);
 }
 
+void GameManager::timeLimit(GameManager &gm,int checkpoint)
+{
+     timeUp(checkpoint);
+     system("cls");
+     gm.gameOver(checkpoint);
+     anotherGameStart(); // Our Header File
+}
+
 
 
 // ==================================================
-// End of QuestionLevel1 Function Definition
+// End of QuestionLevel Function Definition
 
 
 class Structure{
@@ -233,7 +243,7 @@ public:
     int getCheckpoint(){
         int cp = 0;
         for (int i=0; i<3; ++i){
-            if(this->p >= this->checkpoints[i]){
+            if(this->p > this->checkpoints[i]){
                 cp = this->checkpoints[i];
 
             }
@@ -242,15 +252,16 @@ public:
     }
 };
 
-// void startOptions(){
-//     cout << "1 Start Game" << endl;
-//     cout << "2 Exit" << endl;
-// }
+// End of Structure Class
+
+
 
 void clrscr(){
     system("cls");
 }
 
+
+//Beginning of Game
 string startgame()
 {
 string username;
@@ -302,16 +313,7 @@ string username;
     return username;
 }
 
-/*void gameOver(int correctposition)
-{
-    draw_boundary();
-    Cheque(correctposition);
-}*/
-
-
-
-
-
+// Main Function
 int main(){
     SetConsoleOutputCP(CP_UTF8);
 
@@ -341,32 +343,31 @@ int main(){
 
     Sleep(1);
 
-    // Start the game and take the username
 
-    NewGame:
+
+    NewGame:      // To start another New game
     Skip=1;
     Double=1;
     Fifty=1;
     GameManager gm;
     Structure s;
-    username=startgame();
-    string filename = "./players/" + username + ".txt";
+    username=startgame(); // Start the game and take the username
 
+    string filename = "./players/" + username + ".txt";
     ofstream fd;
     fd.open(filename, ios::out);
 
-    // Game Start
+    // Game Start with Question No 1 and question counter is incremented after Correct Answer
     questionCounter = 0;
     for (int position=1; position <=15; ++position){
         clrscr();
 
-
         skipUsed:   // label for Branching after Skip Lifeline
 
-            timeReset=1;
+        timeReset=1;  // To Reset time for New Question
 
 
-        s.display(questionCounter,Skip,Double,Fifty);
+        s.display(questionCounter,Skip,Double,Fifty);  // To display Lifeline and Breakthrough box
         cout << endl << endl;
 
 
@@ -390,11 +391,11 @@ int main(){
             question2 += question[i];
         }
 
-        gotoxy(4,12);cout <<"[*]"<<question1 << endl;
-        gotoxy(5,16);cout <<question2<< endl;
+        gotoxy(4,12);cout <<"[*]"<<question1 << endl;    //To display question
+        gotoxy(5,16);cout <<question2<< endl;            //To display question if question exceeds first line
 
-        gm.displayOptions();
-        correctAnswer = gm.getAnswer();
+        gm.displayOptions();                             //To display options
+        correctAnswer = gm.getAnswer();                  //To get correct answer from File
 
 
 
@@ -408,9 +409,9 @@ int main(){
 
                 int timeUsed;
                 time_t start,end,finish;
-                time(& start);
+                time(& start);                           //Starts the timer
 
-        lifelineUsed: // Label if lifeline is already used
+        lifelineUsed:                                   // Label if lifeline is already used
         do{
         again:
             gotoxy(12,20);symbolPrinter(' ',50);
@@ -422,16 +423,16 @@ int main(){
 
             gotoxy(24,37);cout<<"LEAVE: [8]";
             gotoxy(12,15);cout<<"INPUT: ";
-            counter(questionCounter,timeReset);
+            counter(questionCounter,timeReset);         //For timer
             timeReset=0;
             guessAnswer=getch();
             gotoxy(12,22);cout<<guessAnswer;
-            counter(questionCounter,timeReset);
+            counter(questionCounter,timeReset);         //For Timer
             timeReset=0;
-            gotoxy(12,23);char temp=getch();
+            gotoxy(12,23);char temp=getch();            //For Enter
 
 
-            if(temp=='\r' && guessAnswer>48 && guessAnswer<57)
+            if(temp=='\r' && guessAnswer>48 && guessAnswer<57)      //Only proceeds if the enter is pressed after valid input
             {
                 break;
             }
@@ -441,40 +442,34 @@ int main(){
 
         }while(true);
 
-        if(questionCounter<8)
+        if(questionCounter<8)                       //Time limit is removed 8th after correct Answer
         {
 
-            time(& end);
+            time(& end);                            //Stops the time
             timeUsed=difftime(end,start);
+            int checkpoint=s.getCheckpoint();       //Returns the current checkpoint
             if(questionCounter<4)
             {
                 if( timeUsed>=30)
                 {
-                    int checkpoint=s.getCheckpoint();
-                    timeUp();
-                    system("cls");
-                    gm.gameOver(checkpoint);
-                    anotherGameStart(); // Our Header File
-                goto NewGame;
+                    gm.timeLimit(gm,checkpoint);     // if time is up
+                    goto NewGame;                    //Starts New Game
                 }
             }
             else
             {
                 if( timeUsed>=40)
                 {
-                    int checkpoint=s.getCheckpoint();
-                    timeUp();
-                    system("cls");
-                    gm.gameOver(checkpoint);
-                    anotherGameStart(); // Our Header File
-                goto NewGame;
+                    gm.timeLimit(gm,checkpoint);    // if time is up
+                    goto NewGame;                    //Starts New Game
+
                 }
             }
 
 
         }
 
-        lockedAnswer=guessAnswer - 48;
+        lockedAnswer=guessAnswer - 48;      //Converting user answer from ascii to integer
 
 
 
@@ -492,7 +487,7 @@ int main(){
             system("cls");
             gm.gameOver(questionCounter);
             anotherGameStart(); // Our Header File
-            goto NewGame;    // Go to Beginning page
+            goto NewGame;    // Starts the New ame
 
         }
 
@@ -511,12 +506,12 @@ int main(){
                 system("cls");
                 timeReset=1;
                 --Skip;
-                goto skipUsed;
+                goto skipUsed;      //New Question is Displayed and time is reset as well
             }
             else
             {
                 lifelineUsed(questionCounter,timeReset); //Our header File
-                goto lifelineUsed;
+                goto lifelineUsed;   //If lifeline is not available
             }
 
         }
@@ -532,40 +527,33 @@ int main(){
                 errorDouble:
                 lockedAnswer=guessAfterLifeline(questionCounter,timeReset) - 48; // Our Header File
 
-                if(questionCounter<8)
+                if(questionCounter<8)                       //Timer is removed after 8th correct answer
                 {
-                    time(& finish);
-                    timeUsed=difftime(finish,start);
+                    time(& finish);                         //Stops the time
+                    timeUsed=difftime(finish,start);        //Time taken to Answer
+                    int checkpoint=s.getCheckpoint();
                    if(questionCounter<4)
                    {
                         if( timeUsed>=30)
                         {
-                            int checkpoint=s.getCheckpoint();
-                            timeUp();
-                            system("cls");
-                            gm.gameOver(checkpoint);
-                            anotherGameStart(); // Our Header File
-                            goto NewGame;
+                            gm.timeLimit(gm,checkpoint);    //If time is Up
+                            goto NewGame;                   // Starts New ame
                         }
                     }
                     else
                     {
                         if( timeUsed>=40)
                         {
-                            int checkpoint=s.getCheckpoint();
-                            timeUp();
-                            system("cls");
-                            gm.gameOver(checkpoint);
-                            anotherGameStart(); // Our Header File
-                        goto NewGame;
+                            gm.timeLimit(gm,checkpoint);    //If time is Up
+                            goto NewGame;                  //Starts New Game
                         }
                     }
                 }
 
-                if(lockedAnswer<5 && lockedAnswer!=correctAnswer)
+                if(lockedAnswer<5 && lockedAnswer!=correctAnswer)   //Only if input is For selecting Option
                 {
 
-                    if(wrong==2)
+                    if(wrong==2)                                    //If guessed answer is wrong 2nd time
                     {
                         int checkpoint=s.getCheckpoint();
                         wrongAnswer();
@@ -573,21 +561,21 @@ int main(){
                         gm.gameOver(checkpoint);
                         anotherGameStart();
                         wrong=1;
-                        goto NewGame;
+                        goto NewGame;                               //If guessed answer is wrong 1st time
                     }
                     else
                     {
                         ++wrong;
-                        goto errorDouble;
+                        goto errorDouble;                           //Takes Input for 2nd Guess
                     }
                 }
                 else
-                    goto doubleUsed;
+                    goto doubleUsed;                                //If answer is correct or User LEAVE
              }
              else
              {
                     lifelineUsed(questionCounter,timeReset); //Our header File
-                    goto lifelineUsed;
+                    goto lifelineUsed;                              //If Lifeline is already USed
              }
         }
 
@@ -607,49 +595,43 @@ int main(){
                 int validOption = randomNumber(1,4);
                 A[0]=removeOption1(validOption,correctAnswer);
                 A[1]=removeOption2(validOption,correctAnswer,A[0]);
-                gotoxy(A[0]+6,13);symbolPrinter(' ',55);
-                gotoxy(A[1]+6,13);symbolPrinter(' ',55);
+                gotoxy(A[0]+6,13);symbolPrinter(' ',55);                //Removes incorrect Option
+                gotoxy(A[1]+6,13);symbolPrinter(' ',55);                //Removes Incorrect Option
 
                 s.display(questionCounter,Skip,Double,Fifty);
 
-                lockedAnswer=guessAfterLifeline(questionCounter,timeReset) - 48; //Our Header File
+                lockedAnswer=guessAfterLifeline(questionCounter,timeReset) - 48; //Our Header File  converts ascii to integer
 
-                if(questionCounter<8)
+                if(questionCounter<8)                                   //Timer is removed after 8th correct answer
                 {
                     time(& finish);
                     timeUsed=difftime(finish,start);
-                   if(questionCounter<4)
-                   {
+                    int checkpoint=s.getCheckpoint();
+
+                    if(questionCounter<4)
+                    {
                         if( timeUsed>=30)
                         {
-                            int checkpoint=s.getCheckpoint();
-                            timeUp();
-                            system("cls");
-                            gm.gameOver(checkpoint);
-                            anotherGameStart(); // Our Header File
-                            goto NewGame;
+                            gm.timeLimit(gm,checkpoint);                    //If time is Up
+                            goto NewGame;                                    //Starts New Game
                         }
                     }
                     else
                     {
                         if( timeUsed>=40)
                         {
-                            int checkpoint=s.getCheckpoint();
-                            timeUp();
-                            system("cls");
-                            gm.gameOver(checkpoint);
-                            anotherGameStart(); // Our Header File
-                        goto NewGame;
+                            gm.timeLimit(gm,checkpoint);                    //If time is Up
+                            goto NewGame;                                   //Starts New game
                         }
                     }
-                  goto fiftyUsed;
+                  goto fiftyUsed;                                           //Checks the Correctness of locked answer
                 }
             }
 
             else
             {
                 lifelineUsed(questionCounter,timeReset); //Our header File
-                goto lifelineUsed;
+                goto lifelineUsed;                                         //If lifeline is already Used
             }
         }
         //End of 50:50
@@ -658,26 +640,29 @@ int main(){
         // If wrong Answer
         else
         {
-            int checkpoint=s.getCheckpoint();
+            int checkpoint=s.getCheckpoint();                               //Returns Current Checkpoint
             wrongAnswer();
             system("cls");
-            gm.gameOver(checkpoint);
+            gm.gameOver(checkpoint);                                        //Game ends
             anotherGameStart(); // Our Header File
-            goto NewGame;   // Go to Beginning Page
+            goto NewGame;   //                                              //Starts New Game
         }
 
 
         // If correct Answer, increase question counter
-             questionCounter++;
-             if (questionCounter == 4 || questionCounter == 8 || questionCounter == 11 )
+             questionCounter++;                                             //This happens only if answer is Correct. All other conditons are branched elsewhere so this doesn't happen
+
+             if (questionCounter == 4 || questionCounter == 8 || questionCounter == 11 ) //Increase Level of Question
+             {
              gm.increaseLevel();
+             }
 
   }
     //After 15th question
             system("cls");
-            gm.gameOver(questionCounter);
+            gm.gameOver(questionCounter);                                  //Game ends after 15th Question
             anotherGameStart();  //Our Header file
-            goto NewGame;
+            goto NewGame;                                                  //Starts New game
 
 
     fd.close();

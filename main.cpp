@@ -9,7 +9,7 @@
 #include <conio.h>
 #include "./header/console.h"
 #include "./header/start_page.h"
-#include<vector>
+
 
 
 using namespace std;
@@ -444,17 +444,34 @@ int main(){
         if(questionCounter<8)
         {
 
-         time(& end);
-         timeUsed=difftime(end,start);
-            if( timeUsed>=20)
+            time(& end);
+            timeUsed=difftime(end,start);
+            if(questionCounter<4)
             {
-                int checkpoint=s.getCheckpoint();
-                timeUp();
-                system("cls");
-                gm.gameOver(checkpoint);
-                anotherGameStart(); // Our Header File
-            goto NewGame;
+                if( timeUsed>=30)
+                {
+                    int checkpoint=s.getCheckpoint();
+                    timeUp();
+                    system("cls");
+                    gm.gameOver(checkpoint);
+                    anotherGameStart(); // Our Header File
+                goto NewGame;
+                }
             }
+            else
+            {
+                if( timeUsed>=40)
+                {
+                    int checkpoint=s.getCheckpoint();
+                    timeUp();
+                    system("cls");
+                    gm.gameOver(checkpoint);
+                    anotherGameStart(); // Our Header File
+                goto NewGame;
+                }
+            }
+
+
         }
 
         lockedAnswer=guessAnswer - 48;
@@ -498,7 +515,7 @@ int main(){
             }
             else
             {
-                lifelineUsed(); //Our header File
+                lifelineUsed(questionCounter,timeReset); //Our header File
                 goto lifelineUsed;
             }
 
@@ -517,21 +534,33 @@ int main(){
 
                 if(questionCounter<8)
                 {
-
                     time(& finish);
                     timeUsed=difftime(finish,start);
-                    if( timeUsed>=20)
+                   if(questionCounter<4)
+                   {
+                        if( timeUsed>=30)
+                        {
+                            int checkpoint=s.getCheckpoint();
+                            timeUp();
+                            system("cls");
+                            gm.gameOver(checkpoint);
+                            anotherGameStart(); // Our Header File
+                            goto NewGame;
+                        }
+                    }
+                    else
                     {
-                        int checkpoint=s.getCheckpoint();
-                        timeUp();
-                        system("cls");
-                        gm.gameOver(checkpoint);
-                        anotherGameStart(); // Our Header File
+                        if( timeUsed>=40)
+                        {
+                            int checkpoint=s.getCheckpoint();
+                            timeUp();
+                            system("cls");
+                            gm.gameOver(checkpoint);
+                            anotherGameStart(); // Our Header File
                         goto NewGame;
+                        }
                     }
                 }
-
-
 
                 if(lockedAnswer<5 && lockedAnswer!=correctAnswer)
                 {
@@ -557,7 +586,7 @@ int main(){
              }
              else
              {
-                    lifelineUsed(); //Our header File
+                    lifelineUsed(questionCounter,timeReset); //Our header File
                     goto lifelineUsed;
              }
         }
@@ -589,25 +618,38 @@ int main(){
                 {
                     time(& finish);
                     timeUsed=difftime(finish,start);
-                    if( timeUsed>=20)
-                    {
-                        int checkpoint=s.getCheckpoint();
-                        timeUp();
-                        system("cls");
-                        gm.gameOver(checkpoint);
-                        anotherGameStart(); // Our Header File
-                        goto NewGame;
+                   if(questionCounter<4)
+                   {
+                        if( timeUsed>=30)
+                        {
+                            int checkpoint=s.getCheckpoint();
+                            timeUp();
+                            system("cls");
+                            gm.gameOver(checkpoint);
+                            anotherGameStart(); // Our Header File
+                            goto NewGame;
+                        }
                     }
+                    else
+                    {
+                        if( timeUsed>=40)
+                        {
+                            int checkpoint=s.getCheckpoint();
+                            timeUp();
+                            system("cls");
+                            gm.gameOver(checkpoint);
+                            anotherGameStart(); // Our Header File
+                        goto NewGame;
+                        }
+                    }
+                  goto fiftyUsed;
                 }
-
-
-                goto fiftyUsed;
-
             }
+
             else
             {
-                    lifelineUsed(); //Our header File
-                    goto lifelineUsed;
+                lifelineUsed(questionCounter,timeReset); //Our header File
+                goto lifelineUsed;
             }
         }
         //End of 50:50
@@ -629,7 +671,8 @@ int main(){
              questionCounter++;
              if (questionCounter == 4 || questionCounter == 8 || questionCounter == 11 )
              gm.increaseLevel();
-    }
+
+  }
     //After 15th question
             system("cls");
             gm.gameOver(questionCounter);
@@ -638,6 +681,6 @@ int main(){
 
 
     fd.close();
+   return 0;
 
-    return 0;
 }

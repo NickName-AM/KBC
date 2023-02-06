@@ -20,18 +20,30 @@ void counter(int current,int SR)
 {
    static int last=100;
         static int seconds=20;
-   if(current!=last || SR==1)
+        if(current>7)
         {
-            seconds=20;
+            gotoxy(2,20);cout<<"You have unlimited time ";gotoxy(12,22);
+            return;
+        }
+        if(SR==1)
+        {
+            if(current>3)
+            {
+            seconds=40;
+            }
+            else
+            {
+                seconds=30;
+            }
         }
 
-    while(!kbhit())
-    {
+        while(!kbhit())
+        {
 
         gotoxy(2,36);symbolPrinter(' ',4); gotoxy(2,20);cout<<"Time Remaining: "<<seconds<<"s";gotoxy(12,22);
-        Sleep(900);seconds=(seconds==0)?0:(seconds-1);
+        Sleep(950);seconds=(seconds==0)?0:(seconds-1);
         last=current;
-    }
+        }
 }
 void start_page()
 {
@@ -263,11 +275,12 @@ void anotherGameStart()
                 goto inputagain;
             }
 }
-void lifelineUsed()
+void lifelineUsed(int current,int SR)
 {
     gotoxy(14,15);cout<<"Lifeline used already!!!   ";
                 cout<<"Enter again  [1]";
                 Pressagain:
+                counter(current,SR);
                 if(getch()=='1')
                 {
                     gotoxy(14,15);symbolPrinter(' ',50);

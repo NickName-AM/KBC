@@ -1,30 +1,411 @@
-1 how to you create variable with the numeric value 5?uhheuwehwuehuqwehqwiheiqwheqwiuehehqwheqwe
+1 Which is the tallest building on the Earth?
+Burj khalifa
+Shanghai tower
+Merdeka
+Lotte world tower
+/
+2 Which is the largest country by area?
+Canada
+Russia
+China
+india
+/
+3 who invented the light bulb?
+Michael Faraday
+charles Babbage
+Taylor swift
+Thomas alva edison
+/
+4 How many Hearts does an octopus have?
+one 
+two
+three
+five
+/
+5 which city is located' The status of liberty'?
+Tokyo
+New york
+Abu Dhabi
+Beijing
+/
+6 one kilogram is equal to how many grams?
+100
+1000
+10000
+100000
+/
+7 In which sports in used LBW?
+hockey
+football
+cricket
+polo
+/
+8 what is the name of polygon that has four sides?
+Rectangle
+triangle
+Quadrilateral
+pentagon
+/
+9 who is making the web standards?
+Google
+mozilla
+microsoft
+the world wide web consortium
+/
+10 which country won the FIFA world cup 2022?
+morocco
+croatia
+france
+argentina
+/
+11 who has won the Golden Boot in world cup 2022?
+kylian mbappe
+neymar jr
+lionel messi
+luka modric
+/
+12 who is the developer of computer?
+dennis ritche 
+james gosling
+charles babbage
+None
+/
+13 How many function keys are on the keyboard?
+4
+8
+12
+16
+/
+14 which character is used to indicate an end tag?
+<
+/
+^
+*
+/
+15 how do you insert COMMENT in C++ code?
+//
+/*
+#
+*
+/
+16 how to you create variable with the numeric value 5?
 double X=5;
 x=5;
 num x=5;
 int x=5;
 /
-2 in which italian city you can find the colosseumwqyegywgywqgrwygrr?
+17 in which italian city you can find the colosseum?
 venice
 rome 
 naples
 milan
 /
-3 in which city is the juventus football club basediwqjewqehjquwehqwuiegqiwehqeqweqwjdbqwjhdbqwjhbd?
+18 in which city is the juventus football club based?
 Turin
 Barcelona
 manchester
 marseille
 /
-4 which operator can be used to compare two valuesweywqeguwqgyeuqe?
+19 which operator can be used to compare two values?
 ==
 =
 ><
 <>
 /
-5 which keyword is used to create a class in C++hwewqhewqheqwh?
+20 which keyword is used to create a class in C++?
 classname
 class()
 Myclass
 class
 /
+21 which lake is situated between iran and russia?
+caspian lake
+Baikal lake
+satpara lake
+supreior lake
+/
+22 what is the boiling point of water?
+50°C
+100°C
+150°C
+200°C
+/
+23 Which fruit is associated with Isaac Newton?
+Apple
+Pear
+Pineapple
+Banana
+/
+24 Which animal is not part of the Chinese zodiac?
+Horse
+Dog
+Cat
+Monkey
+/
+25 What is the capital city of Australia?
+Sydney
+Melbourne
+Canberra
+Brisbane
+/
+26 How long is the border between the United States and Canada?
+3,525 miles
+4,525 miles
+5,525 miles
+6,525 miles
+/
+27 What is the largest active volcano in the world?
+Mount Etna
+Mount Vesuvius
+Mouna Loa
+Mount Batur
+/
+28 What is the largest continent in size?
+Asia
+Africa
+Europe
+North America
+/
+29 Which famous inventor invented the telephone?
+Thomas Edison
+Benjamin Franklin
+Alexander Graham Bell
+Nikola Tesla
+/
+30 Which country is the footballer Lionel Messi from?
+Spain
+Brazil
+Argentina
+Portugal
+/
+31 What is the longest river in the world?
+Amazon River
+Nile
+Yellow River
+Congo River
+/
+32 How many sides has a Hexagon?
+5
+6
+7
+8
+/
+33 Who is the CEO of Amazon?
+Elon Musk
+Tim Cook
+Mark Zuckerberg
+Jeff Bezos
+/
+34 What is the capital of Iraq?
+Baghdad
+Islamabad
+Tehran
+Amman
+/
+35 Which country won the first Football World Cup in 1930?
+Brazil
+Portugal
+Italy
+Uruguay
+/
+36 In which city were the 2000 Summer Olympics held?
+London
+Paris
+Barcelona
+Sydney
+/
+37 What colour is the “m” from the McDonald’s logo?
+Blue
+Red
+Yellow
+Black
+/
+38 In which city was Martin Luther King Jr. assassinated?
+New York
+Austin
+Miami
+Memphis
+/
+39 How many players are in a cricket team?
+8
+9
+10
+11
+/
+40 How many players are in a football team?
+8
+9
+10
+11
+/
+41 What does NASA stand for?
+National Aeronautics and Space Administration
+Nautical And Space Association
+National Aeronautics and Space Association
+New Aeronautics and Spacial Administration
+/
+42 What is the name of the gem in the movie Titanic?
+Call of the Ocean
+Heart of Love
+Heart of the Ocean
+Call of Love
+/
+43 Apart from water, what is the most popular drink in the world?
+Tea
+Coffee
+Beer
+Orange Juice
+/
+44 How many bones are there in an adult human body?
+186
+206
+286
+306
+/
+45 Which country is the footballer Kylian Mbappe from?
+France
+Brazil
+Argentina
+Portugal
+/
+46 How high is Mount Everest?
+5,849 m
+6,849 m
+7,849 m
+8,849 m
+/
+47 Which chemical element has Ag as a symbol?
+Gold
+Silver
+Iron
+Carbon
+/
+48 How many elements are there on the periodic table?
+58
+78
+98
+118
+/
+49 What is the highest mountain in Japan?
+Mount Tate
+Mount Kita
+Mount Fuji
+Mount Yari
+/
+50 Which one of the following is the correct spelling?
+Mantenance
+Maintenance
+Miantenance
+Maintenence
+/
+51 An illiterate person is also commonly called which of the following
+Auntha Chhap                
+Ghusghuse
+Khanchuwa                     
+Kumbhakarna
+/
+52 Which is the Shortest Month in a Leap Year?
+April                    
+January      
+February             
+September
+/
+53 Who is the first captain to win all the ICC Trophies: World T20, World Cup, and Champions Trophy?
+Graeme Smith                      
+Kumar Sangakara
+Ricky Ponting                        
+Mahendra Singh Dhoni  
+/
+54 Who discovered Penicillin?
+Alexandre Fleming     
+Alexander Fleming
+Alexnader Fleming     
+Alixander Fleming
+/
+55 ATM Full Form
+Any time money                 
+Automated teller machine
+Automatic teller machine      
+Automation teller machine
+/
+56 Which is the Nepal's Longest Highway?
+Araniko Highway                       
+Mahendra  Highway   
+Pasang Lamhu Highway            
+BP Highway
+/
+57 Which is the bird only found in Nepal?
+Maina                      
+Sparrow    
+Spiny Babbler         
+Monal
+/
+58 What element does the chemical symbol K stand for?
+Lead			
+Tungsten
+Potassium
+Iron
+/
+59 Who is the founder of Microsoft?
+Bill Gates
+Peter Jones    
+Jeff Bezos
+Steve Jobbs
+/
+60 What is the square root of 64?
+64			
+8
+16
+4
+/
+61 How many sides does a nonagon have?
+7
+8
+9			
+13
+/
+62 Which number is closest to 1200?
+1066		
+1301
+1145
+1260
+/
+63 What is the smallest country in the world?
+Luxemburg
+Denmark		
+Vatican City
+New Zealand
+/
+64 What is the fastest land animal?
+A leopard
+A tiger		
+A cheetah
+A Jack Russell
+/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

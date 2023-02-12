@@ -61,6 +61,7 @@ public:
     string getRandomQuestion();                             // Returns a random question USE THE ONE BELOW THIS
     string getPureQuestion();                                   // Get Question without the initial question number USE THIS
     void displayOptions();     // return 4 options as 4-tuple
+    string getOption(int);
     int getQuestionNumber();                                // Get the question number of the chosen question
     int getAnswer();                                        // Get the answ er of the chosed question
     void increaseLevel();
@@ -79,7 +80,7 @@ GameManager::GameManager(){
 }
 
 string GameManager::getRandomQuestion(){
-        this->questionNumber = getRandomNum(1, 5);
+        this->questionNumber = getRandomNum(1,64);
         ifstream file(this->filename);
         while(getline (file, this->q)){
             int num = grabQuestionNumber();
@@ -115,10 +116,19 @@ void GameManager::displayOptions(){
             file.close();
         }
     }
-    gotoxy(7,13);cout << "A) " << this->option[0];gotoxy(7,65);cout<<"[1]";
-    gotoxy(8,13);cout << "B) " << this->option[1];gotoxy(8,65);cout<<"[2]";
-    gotoxy(9,13);cout << "C) " << this->option[2];gotoxy(9,65);cout<<"[3]";
-    gotoxy(10,13);cout << "D) " << this->option[3];gotoxy(10,65);cout<<"[4]";
+
+    SetConsoleTextAttribute(h,6);
+    gotoxy(7,13);cout << "A) " << this->option[0];
+    gotoxy(8,13);cout << "B) " << this->option[1];
+    gotoxy(9,13);cout << "C) " << this->option[2];
+    gotoxy(10,13);cout << "D) " << this->option[3];
+    SetConsoleTextAttribute(h,8);
+    gotoxy(7,65);cout<<"[1]";
+    gotoxy(8,65);cout<<"[2]";
+    gotoxy(9,65);cout<<"[3]";
+    gotoxy(10,65);cout<<"[4]";
+    SetConsoleTextAttribute(h,15);
+
 
 
 }
@@ -168,6 +178,10 @@ void GameManager::timeLimit(GameManager &gm,int checkpoint)
      gm.gameOver(checkpoint);
      anotherGameStart(); // Our Header File
 }
+string GameManager::getOption(int ans)
+{
+    return this->option[ans-1];
+}
 
 
 
@@ -193,12 +207,16 @@ public:
     // Display the structure
     void display(int a,int s,int d,int f){
         this->p=a+1;
+        SetConsoleTextAttribute(h,6);
         gotoxy(2,92);cout<<"BREAKTHROUHH";
         gotoxy(4,95);cout << "Lifeline"<< endl;
+        SetConsoleTextAttribute(h,12);
         gotoxy(6,77);cout<<">>"<<" "<<"("<<s<<")\t\t"<<"X2"<<" "<<"("<<d<<")\t\t" <<"50:50"<<" "<<"("<<f<<")\t\t"<< endl;
+        SetConsoleTextAttribute(h,8);
         gotoxy(7,78);cout<<"[5]";
         gotoxy(7,97);cout<<"[6]";
         gotoxy(7,116);cout<<"[7]";
+        SetConsoleTextAttribute(h,15);
 
 
         string money[] = {"5K", "10K", "20K", "40K", "80K", "1.6Lakh", "3.2Lakh", "6.4Lakh", "12.5Lakh", "25Lakh", "50Lakh", "1 Crore", "3 Crore", "5 Crore", "7 Crore"};
@@ -219,13 +237,17 @@ public:
                 position = " " + position;
             }
 
-
+            if(i==4 || i==8 || i==15)
+            {
+                SetConsoleTextAttribute(h,6);
+            }
             gotoxy(9+j,78);cout << position;
             if (i == p){
                 w-=2;
                 cout << setw(w-10) << ">>" << setw(20) << money[c] << endl;
-            }
-            else cout << setw(w+8) << money[c] << endl;
+           }
+          else cout << setw(w+8) << money[c] << endl;
+         SetConsoleTextAttribute(h,15);
         }
 
         draw_boundary();
@@ -351,7 +373,9 @@ int main(){
     Fifty=1;
     GameManager gm;
     Structure s;
-    username=startgame(); // Start the game and take the username
+    PlaySound("./sounds/startKbc.wav",NULL,SND_ASYNC);       //To play beginning sound
+    username=startgame();                                    // Start the game and take the username
+    PlaySound(NULL,NULL,0);                                  //To stop sound
 
     string filename = "./players/" + username + ".txt";
     ofstream fd;
@@ -376,6 +400,7 @@ int main(){
         string question2 = "";
         question = gm.getPureQuestion();
 
+
         if(question.length()<55)
         {
              for (int i=0;i<question.length();i++)
@@ -391,8 +416,12 @@ int main(){
             question2 += question[i];
         }
 
+
+        PlaySound("./sounds/question.wav",NULL,SND_ASYNC);
+        SetConsoleTextAttribute(h,6);
         gotoxy(4,12);cout <<"[*]"<<question1 << endl;    //To display question
         gotoxy(5,16);cout <<question2<< endl;            //To display question if question exceeds first line
+        SetConsoleTextAttribute(h,15);
 
         gm.displayOptions();                             //To display options
         correctAnswer = gm.getAnswer();                  //To get correct answer from File
@@ -407,6 +436,8 @@ int main(){
 
 
 
+
+
                 int timeUsed;
                 time_t start,end,finish;
                 time(& start);                           //Starts the timer
@@ -417,12 +448,18 @@ int main(){
             gotoxy(12,20);symbolPrinter(' ',50);
             gotoxy(12,15);symbolPrinter(' ',11);
 
+            SetConsoleTextAttribute(h,12);
             gotoxy(19,35);cout<<"Special Note!!";
             gotoxy(21,18);cout<<"Press enter only while Choosing Option and Lifeline";
             gotoxy(22,32);cout<<"else no need to press Enter";
+            SetConsoleTextAttribute(h,15);
 
-            gotoxy(24,37);cout<<"LEAVE: [8]";
             gotoxy(12,15);cout<<"INPUT: ";
+            gotoxy(24,37);cout<<"LEAVE: ";
+            SetConsoleTextAttribute(h,8);
+            cout<<"[8]";
+            SetConsoleTextAttribute(h,15);
+
             counter(questionCounter,timeReset);         //For timer
             timeReset=0;
             guessAnswer=getch();
@@ -494,7 +531,9 @@ int main(){
         //If user guess correct answer
         else if(lockedAnswer==correctAnswer)
         {
-            rightAnswer(); //Our Header File
+            string ans=gm.getOption(lockedAnswer);
+            rightAnswer(lockedAnswer,ans); //Our Header File
+
         }
 
           //Skip lifeline
@@ -556,7 +595,8 @@ int main(){
                     if(wrong==2)                                    //If guessed answer is wrong 2nd time
                     {
                         int checkpoint=s.getCheckpoint();
-                        wrongAnswer();
+                        string ans=gm.getOption(lockedAnswer);                              //Returns Current Checkpoint
+                        wrongAnswer(lockedAnswer,ans);
                         system("cls");
                         gm.gameOver(checkpoint);
                         anotherGameStart();
@@ -640,8 +680,9 @@ int main(){
         // If wrong Answer
         else
         {
-            int checkpoint=s.getCheckpoint();                               //Returns Current Checkpoint
-            wrongAnswer();
+            int checkpoint=s.getCheckpoint();
+            string ans=gm.getOption(lockedAnswer);                              //Returns Current Checkpoint
+            wrongAnswer(lockedAnswer,ans);
             system("cls");
             gm.gameOver(checkpoint);                                        //Game ends
             anotherGameStart(); // Our Header File

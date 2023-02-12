@@ -1,30 +1,221 @@
-1 who has won the Golden Boot in world cup 2022?jhrewejrlqwhjkweafafewaf
-kylian mbappe
-neymar jr
-lionel messi
-luka modric
+1 Which one of the following is NOT a type of filled pasta?
+Mezzaluna
+Tortellini
+Ravioli
+Tortelloni
 /
-2 who is the developer of computer?
-dennis ritche 
-james gosling
-charles babbage
-None
+2 In Chemistry class, you can enjoy all the primary colors just by observing sulfur, since it burns blue, is yellow when solid, and melts into what color liquid?
+Orange                  
+Violet
+Green                     
+Red   
 /
-3 How many function keys are on the keyboard?
-4
+3 What does Volkswagen mean?
+Family Car
+People's Car
+Reliable Car
+Powerful Car
+/
+4 Which article of SAARC charter explains about SAARC secretariat?
+Article 2                    
+Article 4
+Article 6                     
+Article 8  
+/
+5 Which Pixar movie is about two robots who fall in love in space?
+Soul
+Onward
+Finding Dory
+Wall-E
+/
+6
+
+/
+7 What is the collective noun for a group of Rhino?
+A Thunder
+A Crash
+A Skulk
+A Tower
 8
-12
-16
 /
-4 which character is used to indicate an end tag?ehrfbvhjwqeebdjwehfdwhefvwhedfwefwef
-<
+9 Who was the first gymnast to be awarded a perfect score of 10.0 at the Olympic Games?
+Beth Tweddle
+Larisa Latynina
+Nadia Comăneci
+Simone Biles
 /
-^
-*
+10
+ 
 /
-5 how do you insert sinle line COMMENT in C++ code?dwqyedqwvdhwdvqydgvvqwSAVDVadvVDavd
-//
-/*
-#
-*
+11 
+
+
+
+
+
 /
+12 In which season would you need to visit Japan to view the Cherry Blossoms?
+Summer
+Spring
+Winter
+Autumn
+/
+13 
+
+/
+14
+
+/
+15 
+
+
+
+
+
+/
+16 
+
+/
+17 Which coffee chain is named after a character in Moby Dick by Herman Melville?
+Biggby Coffee
+Pret
+Starbucks
+Nero
+/
+18 
+
+/
+19 A strawberry is not technically a berry. What is it?
+A hybrid vegetable
+An accessory fruit
+A cruciferous vegetable
+Trick question – it's a berry
+/
+20 Who was the third person to walk on the moon?
+Neil Armstrong
+Edwin 'Buzz' Aldrin
+Charles 'Pete' Conrad
+Mark Hamill
+/
+21 
+
+/
+22 What do the stars represent on the Brazilian flag?
+Every town and city in the country
+Constellations in the southern hemisphere the day Brazil became a republic
+How many trophies the football team have won, so it changes a lot!
+They just looked "cool", according to their first president
+/
+23 What is the maximum number of points a player can score during a frame of snooker?
+124
+138
+147
+150
+/
+24 
+
+/
+25 
+
+/
+26
+/
+27 What are the Rice Krispies mascots called?
+Snap, Crackle and Pop
+Boom, Blast and Crinkle
+Bang, Snip and Rick
+Coco, Captain Rik and Cornelius Rooster
+/
+28 The first FA Cup Final took place in 1872. Which teams took part?
+Manchester United and Everton
+Wanderers and Royal Engineers
+Newcastle United and Sunderland
+Charlton Athletic and Norwich City
+/
+29 
+
+/
+30 How long do sloths take to digest a meal?
+6 hours
+12 hours
+1 week
+2 weeks
+/
+31
+ 
+/
+32 
+/
+33 
+
+/
+34 In which year was the first Academy Award given?
+1929
+1954
+1977
+1988
+/
+35 
+
+/
+36 
+
+
+
+
+/
+37
+/
+38
+
+/
+39 
+
+/
+40 
+
+/
+41 Where did the Battle of Hastings take place?
+Hastings
+Waterloo
+Battle
+Gettysburg
+/
+42 
+
+/
+43 
+
+/
+44
+
+/
+45 In centimetres, how tall is the Christ the Redeemer statue in Rio de Janeiro?
+2500
+2505
+3,800
+4000
+/
+46 Which of the following is not a high-level cloud?
+Stratus
+Cirrostratus
+Cirrocumulus
+Cirrus
+/
+47 
+
+/
+48 Which of the following is not a low-level cloud?
+Stratus
+Cumulus
+Stratocumulus
+Cirrus
+/
+49 
+
+/
+50 November Rain” is the longest song that has reached the top 10 in the Billboard Hot 100, who is it by?
+Guns N' Roses
+Motley Crue		
+Sheryl Crow
+Meatloaf

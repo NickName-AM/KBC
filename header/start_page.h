@@ -1,10 +1,13 @@
 #include <iostream>
 #include<ctime>
 #include<conio.h>
+#include<windows.h>
+#include<mmsystem.h>
 
 
 
 using namespace std;
+HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
 void gotoxy(short y,short x)  //To MoveCursor
 {
     COORD pos={x,y};
@@ -22,7 +25,10 @@ void counter(int current,int SR)               //Timer
         static int seconds=20;
         if(current>7)
         {
-            gotoxy(2,20);cout<<"You have unlimited time ";gotoxy(12,22);  //After 8th Correct Answer
+            SetConsoleTextAttribute(h,12);
+            gotoxy(2,20);cout<<"You have unlimited time ";
+            SetConsoleTextAttribute(h,15);
+            gotoxy(12,22);  //After 8th Correct Answer
             return;
         }
         if(SR==1)
@@ -39,11 +45,34 @@ void counter(int current,int SR)               //Timer
 
         while(!kbhit())                                                     //Breaks after User gives Input
         {
+            if(seconds==0)
+            {
+                PlaySound("./sounds/hooter.wav",NULL,SND_ASYNC);
+            }
 
-        gotoxy(2,36);symbolPrinter(' ',4); gotoxy(2,20);cout<<"Time Remaining: "<<seconds<<"s";gotoxy(12,22);
-        Sleep(970);seconds=(seconds==0)?0:(seconds-1);
+            else
+            {
+                 PlaySound("./sounds/tictoc.wav",NULL,SND_ASYNC);
+            }
+
+        gotoxy(2,36);symbolPrinter(' ',4);
+        gotoxy(2,20);
+        SetConsoleTextAttribute(h,12);
+        cout<<"Time Remaining: ";
+        if(seconds>5)
+        {
+        cout<<seconds<<"s";
+        }
+        else{
+        SetConsoleTextAttribute(h,4);
+        cout<<seconds<<"s";
+        }
+        SetConsoleTextAttribute(h,15);
+        gotoxy(12,22);
+        Sleep(960);seconds=(seconds==0)?0:(seconds-1);
         last=current;
         }
+         PlaySound(NULL,NULL,0);
 }
 void start_page()    //Front Page
 {
@@ -83,6 +112,7 @@ void start_page()    //Front Page
     gotoxy(13,47);cout<<"▓▓       ▓▓    ▓▓ ▓▓    ▓▓ ▓▓    ▓▓ ▓▓       ▓▓       ▓▓    ▓▓    ▓▓      ▓▓  ";
     gotoxy(14,47);cout<<"▓▓    ▓▓ ▓▓    ▓▓ ▓▓    ▓▓ ▓▓    ▓▓ ▓▓       ▓▓       ▓▓    ▓▓    ▓▓      ▓▓  ";
     gotoxy(15,47);cout<<" ▓▓▓▓▓▓  ▓▓    ▓▓  ▓▓▓▓▓▓  ▓▓    ▓▓ ▓▓▓▓▓▓▓▓ ▓▓       ▓▓    ▓▓    ▓▓    ▓▓▓▓▓▓";
+
 }
 
 void help()     //If pressed for Help
@@ -124,6 +154,7 @@ void help()     //If pressed for Help
 
 void breakthrough_box()      // To Print Breakthrough Box
 {
+    SetConsoleTextAttribute(h,6);
         gotoxy(3,76);symbolPrinter('_', 45);
         gotoxy(5,76);symbolPrinter('.', 45);
         gotoxy(8,76);symbolPrinter('.', 45);
@@ -138,6 +169,7 @@ void breakthrough_box()      // To Print Breakthrough Box
         gotoxy(2,121);cout<<"*";
         gotoxy(25,75);cout<<"*";
         gotoxy(25,121);cout<<"*";
+        SetConsoleTextAttribute(h,15);
 }
 void draw_boundary()                    //To draw a Boundary
 {
@@ -218,27 +250,46 @@ void Cheque(int currentposition)                        //To Display winning amo
 
 
 }
-void rightAnswer()                                        //If correct answer is guessed
+void rightAnswer(int no,string ans)                                        //If correct answer is guessed
 {
+     PlaySound("./sounds/correct.wav",NULL,SND_ASYNC);
+     gotoxy(6+no,16);
+     SetConsoleTextAttribute(h,10);
+     cout<<ans;
+     SetConsoleTextAttribute(h,15);
+
             gotoxy(13,15);cout<<"You have entered correct answer";
+
             gotoxy(16,38);cout<<"Next  [1]";
             gotoxy(16,47);
             do
             {
                 if(getch()=='1')
+                {
+                    PlaySound(NULL,NULL,0);
                     break;
+                }
             }while(true);
 
 }
-void wrongAnswer()                                      //If wrong answer is Guessed
+void wrongAnswer(int no,string ans)                                      //If wrong answer is Guessed
 {
+    PlaySound("./sounds/wrong.wav",NULL,SND_ASYNC);
+    gotoxy(6+no,16);
+     SetConsoleTextAttribute(h,4);
+     cout<<ans;
+     SetConsoleTextAttribute(h,15);
+
      gotoxy(13,15);cout<<"You have entered Incorrect answer";
             gotoxy(16,38);cout<<"Next  [1]";
             gotoxy(16,47);
             do
             {
                 if(getch()=='1')
+                {
+                    PlaySound(NULL,NULL,0);
                     break;
+                }
             }while(true);
 
 }
@@ -246,14 +297,21 @@ void timeUp(int cp)                                           //If time is Up
 {
     if(cp==0)
     {
+        SetConsoleTextAttribute(h,12);
      gotoxy(13,15);cout<<"Your time is up, You gave answer in more than 30 sec";
+        SetConsoleTextAttribute(h,15);
     }
     if(cp==4)
     {
+        SetConsoleTextAttribute(h,12);
      gotoxy(13,15);cout<<"Your time is up, You gave answer in more than 40 sec";
+        SetConsoleTextAttribute(h,15);
     }
 
-    gotoxy(16,38);cout<<"Next  [1]";
+    gotoxy(16,38);cout<<"Next  ";
+    SetConsoleTextAttribute(h,8);
+    cout<<"[1]";
+    SetConsoleTextAttribute(h,15);
     gotoxy(16,47);
     do
     {
@@ -338,11 +396,14 @@ char guessAfterLifeline(int Current,int SR)                        //To Guess An
                 againInsidedouble:
                 gotoxy(12,20);symbolPrinter(' ',50);
                 gotoxy(12,15);symbolPrinter(' ',11);
+
+                SetConsoleTextAttribute(h,12);
                 gotoxy(19,35);cout<<"Special Note!!";
                 gotoxy(21,17);symbolPrinter(' ',54);
                 gotoxy(22,30);symbolPrinter(' ',11);
                 gotoxy(21,23);cout<<"You cannot use another Lifeline after";
                 gotoxy(22,25);cout<<"using X2 or 50:50 in same qustion";
+                SetConsoleTextAttribute(h,15);
 
                 gotoxy(24,37);cout<<"LEAVE: [8]";
                 gotoxy(12,15);cout<<"INPUT: ";

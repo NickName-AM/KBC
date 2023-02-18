@@ -37,7 +37,8 @@ public:
     virtual void displayOptions() = 0;
     virtual int getQuestionNumber() = 0;
     virtual int getAnswer() = 0;
-    virtual void gameOver(int)=0;
+    virtual void gameOver(int,string)=0;
+    virtual string getOption(int)=0;
 
 
 
@@ -46,15 +47,7 @@ public:
 
 class GameManager: public Question{
 protected:
-    int level;
-    int grabQuestionNumber(){
-        // Get the Question number located at the beginning of the line
-        int num = 0;
-        num = int(this->q[0]) - 48;
-        if (this->q[1] != ' ')
-            num = num * 10 + (int(this->q[1]) - 48);
-        return num;
-    }
+    int level=1;
 public:
     GameManager();                                       // Constructor
 
@@ -65,8 +58,8 @@ public:
     int getQuestionNumber();                                // Get the question number of the chosen question
     int getAnswer();                                        // Get the answ er of the chosed question
     void increaseLevel();
-    void gameOver(int correctposition);
-    void timeLimit(GameManager &gm,int checkpoint);
+    void gameOver(int correctposition, string username);
+    void timeLimit(GameManager &gm,int checkpoint, string username);
 
     ~GameManager(){}
 };
@@ -78,15 +71,30 @@ GameManager::GameManager(){
     this->filename = "./question/level1.txt";
     this->answerFile = "./answer/answer1.txt";
 }
+void GameManager::increaseLevel(){
+    this->level++;
+    if (this->level == 2){
+        this->filename = "./question/level2.txt";
+        this->answerFile = "./answer/answer2.txt";
+    } else if(this->level == 3){
+        this->filename = "./question/level3.txt";
+        this->answerFile = "./answer/answer3.txt";
+    } else {
+        this->filename = "./question/level4.txt";
+        this->answerFile = "./answer/answer4.txt";
+    }
+}
 
 string GameManager::getRandomQuestion(){
-        this->questionNumber = getRandomNum(1,64);
+        this->questionNumber =getRandomNum(1,75);
+
         ifstream file(this->filename);
         while(getline (file, this->q)){
-            int num = grabQuestionNumber();
+            int num = getQuestionNumber();
 
             if (this->questionNumber == num){
                 file.close();
+
 
                 return this->q;
             }
@@ -99,7 +107,7 @@ string GameManager::getPureQuestion(){
     string pureQuestion;
     int c;
     for (c = 0; c<q.length(); c++){
-        if(c<2) continue;
+        if(c<3) continue;
         pureQuestion += q[c];
     }
     return pureQuestion;
@@ -107,34 +115,48 @@ string GameManager::getPureQuestion(){
 }
 
 void GameManager::displayOptions(){
+
     ifstream file(this->filename);
+    int no;
     while(getline (file, this->q)){
-        int num = grabQuestionNumber();
+        int num = getQuestionNumber();
         if (this->questionNumber == num){
+                no=num;
             for(int i = 0; i<4; i++)
                 getline(file, this->option[i]);
             file.close();
         }
     }
 
+
     SetConsoleTextAttribute(h,6);
+   // gotoxy(6,13);cout <<num<<"  "<< this->questionNumber;
+    gotoxy(6,13);cout << no<< " " << this->questionNumber;
     gotoxy(7,13);cout << "A) " << this->option[0];
     gotoxy(8,13);cout << "B) " << this->option[1];
     gotoxy(9,13);cout << "C) " << this->option[2];
     gotoxy(10,13);cout << "D) " << this->option[3];
+
     SetConsoleTextAttribute(h,8);
-    gotoxy(7,65);cout<<"[1]";
-    gotoxy(8,65);cout<<"[2]";
-    gotoxy(9,65);cout<<"[3]";
-    gotoxy(10,65);cout<<"[4]";
+    gotoxy(7,70);cout<<"[1]";
+    gotoxy(8,70);cout<<"[2]";
+    gotoxy(9,70);cout<<"[3]";
+    gotoxy(10,70);cout<<"[4]";
     SetConsoleTextAttribute(h,15);
-
-
-
 }
 
 int GameManager::getQuestionNumber(){
-    return this->questionNumber;
+    // Get the Question number located at the beginning of the line
+    int num;
+    num = int(this->q[0]) - 48;
+    if (this->q[1] != ')' && this->q[2]==')')
+        num = num * 10 + (int(this->q[1]) - 48);
+
+    if(this->q[1]==')' || this->q[2]==')')
+        return num;
+    else
+        return 0;
+
 }
 
 int GameManager::getAnswer(){
@@ -153,29 +175,17 @@ int GameManager::getAnswer(){
     return -1;
 }
 
-void GameManager::increaseLevel(){
-    this->level++;
-    if (this->level == 2){
-        this->filename = "./question/level2.txt";
-        this->answerFile = "./answer/answer2.txt";
-    } else if(this->level == 3){
-        this->filename = "./question/level3.txt";
-        this->answerFile = "./answer/answer3.txt";
-    } else {
-        this->filename = "./question/level4.txt";
-        this->answerFile = "./answer/answer4.txt";
-    }
-}
-void GameManager::gameOver(int correctposition){
+void GameManager::gameOver(int correctposition, string username){
     draw_boundary();
-    Cheque(correctposition);
+    long score = Cheque(correctposition);
+    addScore(username,score);
 }
 
-void GameManager::timeLimit(GameManager &gm,int checkpoint)
+void GameManager::timeLimit(GameManager &gm,int checkpoint,string username)
 {
      timeUp(checkpoint);
      system("cls");
-     gm.gameOver(checkpoint);
+     gm.gameOver(checkpoint,username);
      anotherGameStart(); // Our Header File
 }
 string GameManager::getOption(int ans)
@@ -292,6 +302,7 @@ string username;
     gotoxy(18,60);cout<<"Start a New Game[1]";
     gotoxy(18,18);cout << "Help[2]";
     gotoxy(18,110);cout << "Quit[3]" << endl;
+    gotoxy(23,62);cout << "HighScore[4]" << endl;
     char starting_user_input='0';
     while(starting_user_input != '1' ||'3'||'2')
     {
@@ -331,6 +342,25 @@ string username;
             }
             break;
         }
+
+        else if(starting_user_input=='4')
+        {
+            clrscr();
+            displayHighScores(); 
+            gotoxy(23,55);cout<< "Start a New Game[1]";
+            starting_user_input = '0';
+            while(starting_user_input != '1')
+            {
+                gotoxy(25,62),starting_user_input= getch();
+                if (starting_user_input == '1')
+                {
+                    username=request_Name();
+                    clrscr();
+                    break;
+                }
+            }  
+            break;
+        }
     }
     return username;
 }
@@ -338,6 +368,7 @@ string username;
 // Main Function
 int main(){
     SetConsoleOutputCP(CP_UTF8);
+    clrscr();
 
 
     // To resize the console
@@ -360,6 +391,9 @@ int main(){
     char newinput;
     int Skip,Double,Fifty;
     int timeReset;
+
+    int fileno;
+    int indicator=1;
 
 
 
@@ -396,32 +430,11 @@ int main(){
 
 
         // Question
-        string question1 = "";
-        string question2 = "";
+
         question = gm.getPureQuestion();
+        fileno=gm.getQuestionNumber();
 
-
-        if(question.length()<55)
-        {
-             for (int i=0;i<question.length();i++)
-             {
-                question1 += question[i];
-             }
-        }
-        else
-        {
-             for (int i=0;i<55;i++)
-            question1 += question[i];
-            for (int i=55;i<question.length();i++)
-            question2 += question[i];
-        }
-
-
-        PlaySound("./sounds/question.wav",NULL,SND_ASYNC);
-        SetConsoleTextAttribute(h,6);
-        gotoxy(4,12);cout <<"[*]"<<question1 << endl;    //To display question
-        gotoxy(5,16);cout <<question2<< endl;            //To display question if question exceeds first line
-        SetConsoleTextAttribute(h,15);
+        displayQuestion(question,indicator,fileno);
 
         gm.displayOptions();                             //To display options
         correctAnswer = gm.getAnswer();                  //To get correct answer from File
@@ -489,7 +502,7 @@ int main(){
             {
                 if( timeUsed>=30)
                 {
-                    gm.timeLimit(gm,checkpoint);     // if time is up
+                    gm.timeLimit(gm,checkpoint,username);     // if time is up
                     goto NewGame;                    //Starts New Game
                 }
             }
@@ -497,22 +510,22 @@ int main(){
             {
                 if( timeUsed>=40)
                 {
-                    gm.timeLimit(gm,checkpoint);    // if time is up
+                    gm.timeLimit(gm,checkpoint,username);    // if time is up
                     goto NewGame;                    //Starts New Game
 
                 }
             }
-
-
         }
 
         lockedAnswer=guessAnswer - 48;      //Converting user answer from ascii to integer
 
 
-
         fd << question << endl;
-      //  fd << guessAnswer << endl << endl;
-
+        if(lockedAnswer>0 && lockedAnswer<5)
+        {
+            fd <<"Locked Answer: "<<gm.getOption(lockedAnswer)<<endl;
+        }
+        fd<<"Correct Answer: "<<gm.getOption(correctAnswer)<<endl;
 
       // label for Branching after using Lifeline
         fiftyUsed:
@@ -522,7 +535,7 @@ int main(){
         if(lockedAnswer==8)
         {
             system("cls");
-            gm.gameOver(questionCounter);
+            gm.gameOver(questionCounter,username);
             anotherGameStart(); // Our Header File
             goto NewGame;    // Starts the New ame
 
@@ -575,7 +588,7 @@ int main(){
                    {
                         if( timeUsed>=30)
                         {
-                            gm.timeLimit(gm,checkpoint);    //If time is Up
+                            gm.timeLimit(gm,checkpoint,username);    //If time is Up
                             goto NewGame;                   // Starts New ame
                         }
                     }
@@ -583,7 +596,7 @@ int main(){
                     {
                         if( timeUsed>=40)
                         {
-                            gm.timeLimit(gm,checkpoint);    //If time is Up
+                            gm.timeLimit(gm,checkpoint,username);    //If time is Up
                             goto NewGame;                  //Starts New Game
                         }
                     }
@@ -598,7 +611,7 @@ int main(){
                         string ans=gm.getOption(lockedAnswer);                              //Returns Current Checkpoint
                         wrongAnswer(lockedAnswer,ans);
                         system("cls");
-                        gm.gameOver(checkpoint);
+                        gm.gameOver(checkpoint,username);
                         anotherGameStart();
                         wrong=1;
                         goto NewGame;                               //If guessed answer is wrong 1st time
@@ -652,7 +665,7 @@ int main(){
                     {
                         if( timeUsed>=30)
                         {
-                            gm.timeLimit(gm,checkpoint);                    //If time is Up
+                            gm.timeLimit(gm,checkpoint,username);                    //If time is Up
                             goto NewGame;                                    //Starts New Game
                         }
                     }
@@ -660,7 +673,7 @@ int main(){
                     {
                         if( timeUsed>=40)
                         {
-                            gm.timeLimit(gm,checkpoint);                    //If time is Up
+                            gm.timeLimit(gm,checkpoint,username);                    //If time is Up
                             goto NewGame;                                   //Starts New game
                         }
                     }
@@ -684,7 +697,7 @@ int main(){
             string ans=gm.getOption(lockedAnswer);                              //Returns Current Checkpoint
             wrongAnswer(lockedAnswer,ans);
             system("cls");
-            gm.gameOver(checkpoint);                                        //Game ends
+            gm.gameOver(checkpoint,username);                                        //Game ends
             anotherGameStart(); // Our Header File
             goto NewGame;   //                                              //Starts New Game
         }
@@ -695,13 +708,14 @@ int main(){
 
              if (questionCounter == 4 || questionCounter == 8 || questionCounter == 11 ) //Increase Level of Question
              {
+                 indicator++;
              gm.increaseLevel();
              }
 
   }
     //After 15th question
             system("cls");
-            gm.gameOver(questionCounter);                                  //Game ends after 15th Question
+            gm.gameOver(questionCounter,username);                                  //Game ends after 15th Question
             anotherGameStart();  //Our Header file
             goto NewGame;                                                  //Starts New game
 

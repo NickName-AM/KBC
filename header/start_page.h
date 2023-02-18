@@ -3,6 +3,10 @@
 #include<conio.h>
 #include<windows.h>
 #include<mmsystem.h>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <algorithm>
 
 
 
@@ -69,7 +73,7 @@ void counter(int current,int SR)               //Timer
         }
         SetConsoleTextAttribute(h,15);
         gotoxy(12,22);
-        Sleep(960);seconds=(seconds==0)?0:(seconds-1);
+        Sleep(955);seconds=(seconds==0)?0:(seconds-1);
         last=current;
         }
          PlaySound(NULL,NULL,0);
@@ -203,6 +207,10 @@ string request_Name()                       //Request name form user at start of
     string username;
     gotoxy(18,17);
     symbolPrinter(' ',100);
+    gotoxy(23,62);
+    symbolPrinter(' ',100);
+    gotoxy(23,55);
+    symbolPrinter(' ',100);
     gotoxy(19,60);
     cout<<"Enter your name ";
     gotoxy(21,59);
@@ -214,6 +222,7 @@ string request_Name()                       //Request name form user at start of
 
 void chequeBox()                        //To display Box for Cheque
 {
+     SetConsoleTextAttribute(h,6);
      gotoxy(5,23);symbolPrinter('_',87);
     gotoxy(22,24);symbolPrinter('_',86);
     for(int i=0;i<17;i++)
@@ -224,8 +233,11 @@ void chequeBox()                        //To display Box for Cheque
      gotoxy(23,23);cout<<"|";
      gotoxy(5,23);cout<<"*";gotoxy(5,110);cout<<"*";
      gotoxy(23,23);cout<<"*";gotoxy(23,110);cout<<"*";
+      SetConsoleTextAttribute(h,15);
      gotoxy(6,64);cout<<"CHEQUE";
+      SetConsoleTextAttribute(h,6);
      gotoxy(18,30);cout<<"Signed By: Abik Maharjan, Dipesh Shrestha, Palden Gurung, Saugat Maharjan";
+      SetConsoleTextAttribute(h,15);
      gotoxy(21,59);cout<<"Copyright \u00A9 2023";
      gotoxy(24,14);cout << "Quit[2]" << endl;
      gotoxy(24,114);cout<<"Next[1]";
@@ -235,10 +247,11 @@ void chequeBox()                        //To display Box for Cheque
      gotoxy(24,68);
 }
 
-void Cheque(int currentposition)                        //To Display winning amount
+long Cheque(int currentposition)                        //To Display winning amount
 {
     chequeBox();
     string money[] = {"0","5K", "10K", "20K", "40K", "80K", "1.6Lakh", "3.2Lakh", "6.4Lakh", "12.5Lakh", "25Lakh", "50Lakh", "1 Crore", "3 Crore", "5 Crore", "7 Crore"};
+    long score[] = {0,5000,10000,20000,40000,80000,160000,320000,640000,1250000,2500000,5000000,10000000,30000000,50000000,70000000};
     if(currentposition==0)
     {
     gotoxy(13,56);cout<<"Sorry :( You have won RS "<<money[currentposition];
@@ -248,6 +261,7 @@ void Cheque(int currentposition)                        //To Display winning amo
     gotoxy(13,48);cout<<"Congratulation!!! :) You have won RS "<<money[currentposition];
     }
 
+    return score[currentposition];
 
 }
 void rightAnswer(int no,string ans)                                        //If correct answer is guessed
@@ -425,11 +439,187 @@ char guessAfterLifeline(int Current,int SR)                        //To Guess An
             }while(true);
             return guessAnswer;
 
+}
+void displayQuestion(string question,int indicator,int fileno)
+{
+        string question1 = "";
+        string question2 = "";
+        string question3 = "";
+        string question4 = "";
 
+        if(question.length()<55)
+        {
+             for (int i=0;i<question.length();i++)
+             {
+                question1 += question[i];
+             }
+        }
+        else if(question.length()<110)
+        {
+             for (int i=0;i<55;i++)
+            question1 += question[i];
+            for (int i=55;i<question.length();i++)
+            question2 += question[i];
+        }
+        else if(question.length()<165)
+        {
+             for (int i=0;i<55;i++)
+            question1 += question[i];
+            for (int i=55;i<110;i++)
+            question2 += question[i];
+            for (int i=110;i<question.length();i++)
+            question3 += question[i];
+        }
+        else
+        {
+            for (int i=0;i<55;i++)
+            question1 += question[i];
+            for (int i=55;i<110;i++)
+            question2 += question[i];
+            for (int i=110;i<165;i++)
+            question3 += question[i];
+            for (int i=165;i<question.length();i++)
+            question4 += question[i];
+        }
+
+
+        PlaySound("./sounds/question.wav",NULL,SND_ASYNC);
+        SetConsoleTextAttribute(h,6);
+        gotoxy(3,12);cout <<"[*]"<<question1 << endl;    //To display question
+        gotoxy(4,16);cout <<question2<< endl;            //To display question if question exceeds first line
+        gotoxy(5,16);cout <<question3<< endl;            //To display question if question exceeds first line
+        gotoxy(6,16);cout <<question4<< endl;            //To display question if question exceeds first line
+        SetConsoleTextAttribute(h,15);
+
+
+          if(indicator<3 && (fileno==76 || fileno==77))
+          {
+            if(indicator==1)
+            {
+                 if(fileno==76)
+                        PlaySound("./sounds/176.wav",NULL,SND_SYNC);
+                 else
+                 {
+                        PlaySound("./sounds/177.wav",NULL,SND_SYNC);
+                 }
+            }
+            else
+            {
+                 if(fileno==76)
+                        PlaySound("./sounds/276.wav",NULL,SND_SYNC);
+                 else
+                        PlaySound("./sounds/277.wav",NULL,SND_SYNC);
+            }
+
+          }
 }
 int randomNumber(int A,int B)                       //To generate Random Number
 {
     srand(time(0));
     int random = int(rand()%(B-A+1))+ A;
     return random;
+}
+
+/*============================== Highscore ========================*/
+struct Score {
+    string name;
+    int score;
+};
+
+bool compareScore(const Score &a, const Score &b) {
+    return a.score > b.score;
+}
+
+void addHighScore(vector<Score> &scores, Score score) {
+    bool found = false;
+    for (int i = 0; i < scores.size(); i++) {
+        if (scores[i].name == score.name) {
+            if (score.score > scores[i].score) {
+                scores[i].score = score.score;
+            }
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        scores.push_back(score);
+    }
+    sort(scores.begin(), scores.end(), compareScore);
+}
+
+
+void saveHighScores(vector<Score> &scores) {
+    ofstream outFile;
+    outFile.open("./highscores.txt");
+    if (outFile.is_open()) {
+        for (Score score : scores) {
+            outFile << score.name << " " << score.score << endl;
+        }
+        outFile.close();
+    }
+}
+
+void loadHighScores(vector<Score> &scores) {
+    ifstream inFile;
+    inFile.open("./highscores.txt");
+    if (inFile.is_open()) {
+        while (!inFile.eof()) {
+            Score score;
+            inFile >> score.name >> score.score;
+            if (!inFile.eof()) {
+                scores.push_back(score);
+            }
+        }
+        inFile.close();
+    }
+}
+
+
+void addScore(string name, int user_score) {
+    vector<Score> scores;
+    loadHighScores(scores);
+    Score score;
+    score.name = name;
+    score.score = user_score;
+    addHighScore(scores, score);
+    saveHighScores(scores);
+}
+
+
+void displayHighScores() {
+
+    SetConsoleTextAttribute(h,6);
+    draw_boundary();
+    SetConsoleTextAttribute(h,15);
+
+    gotoxy(3,30);cout << "Names";
+    gotoxy(3,85);cout << "Scores" << endl;
+    string name;
+    long score;
+    ifstream outFile;
+    int count = 0;
+    int i = 4;
+    outFile.open("./highscores.txt");
+        
+    while(outFile >> name >> score) 
+    {
+        gotoxy(i,27);cout<< "♛  " << name << "  ♛";
+        gotoxy(i,85);cout<<score;
+        i += 2;
+        count++;
+        break;
+    }
+    while(outFile >> name >> score)
+    if (count < 7) 
+    {
+        gotoxy(i,30);cout << name;
+        gotoxy(i,85);cout << score;
+        count++;
+        i += 2;
+    }
+    else 
+    {
+        break;
+    }
+    outFile.close();
 }
